@@ -13,7 +13,7 @@ const passportHandlers = {
         return done(err);
       }
       return done(null, user);
-    })
+    });
   },
   login: (email, pass, done) => {
   	// console.log(email, pass, done);

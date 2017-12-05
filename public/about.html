@@ -20,8 +20,9 @@
 								<div class="sk-circle12 sk-circle"></div>
 							</div>
 						</div>
-						<div  class="table"  ng-show="orders">
-							<table class="table table-hover">
+						<div  class="table">
+							<table-info data={{orders}} dataKeys={{orderKeys}} />
+<!-- 							<table class="table table-hover">
 								<tr>
 									<th>City</th>
 									<th>Shipping Date</th>
@@ -32,7 +33,7 @@
 									<td>{{val.shippingDate}}</td>
 									<td>{{val.products}}</td>
 								</tr>
-							</table>
+							</table> -->
 						</div>
 					</div>
 				</div>

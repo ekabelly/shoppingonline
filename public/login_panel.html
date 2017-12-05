@@ -31,5 +31,8 @@
   </div> <!-- /form -->
   <div ng-show="user">
     <h1>Hello, {{user.fName}}</h1>
+    <div ng-show="user.orders">
+      <tableInfo data={{user.orders}} dataKeys={{Object.keys(user.orders[0])}} >
+    </div>
   </div>
 </div>
