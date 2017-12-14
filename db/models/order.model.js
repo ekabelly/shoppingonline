@@ -14,10 +14,7 @@ const OrderSchema = new Schema({
 	shippingDate:String,
 	orderDate:String,
 	lastDigits:String,
-	products:{
-		type: Array,
-		required: true
-	}
+	products:[{type:Schema.Types.ObjectId, ref:'Product'}]
 });
 
 const Order = mongoose.model('order', OrderSchema);

@@ -17,8 +17,7 @@ const UserSchema = new Schema({
 	lName:requiredString,
 	pass:requiredString,
 	city:String,
-	street:String,
-	orders:[{type:Schema.Types.ObjectId, ref:'Order'}]
+	street:String
 });
 
 const User = mongoose.model('user', UserSchema);

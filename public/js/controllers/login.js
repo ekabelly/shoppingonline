@@ -3,7 +3,12 @@ app.controller('Login', ($scope, $http) => {
 	$scope.products = false;
 	$scope.user = false;
 
-	const successHandler = (req, res) =>$scope[req] = res.data.data;
+	$scope.tablefields = field =>{
+		console.log(field);
+		return field !== 'products' && field !== 'picture';
+	}
+
+	const successHandler = (req, res) =>$scope[req] = res;
 	const errHnadler = err =>{
 		if (err.status === 400) {
 			return $scope.err = 'Please Fill All The Fields Correctly';
@@ -17,20 +22,27 @@ app.controller('Login', ($scope, $http) => {
 	$scope.fetchProducts = () =>{
 		// console.log('fetchProducts');
 		if (!$scope.products) {
-			$http.get('/products').then(response=>successHandler('products', response));
+			$http.get('/products').then(response=>{
+				$scope.productKeys = {value:['name', 'price', 'picture'], display:['Name', 'Price', 'Picture']}
+				successHandler('products', response.data.data);
+			});
 		}
 	}
 
 	$scope.fetchOrders = () =>{
 		if (!$scope.orders) {
 			$http.get('/orders').then(response=>{
-				$scope.orderKeys = ['ShiipingDate', 'City', 'Products'];
-				successHandler('orders', response);
+				$scope.orderKeys = {value:['shippingDate', 'orderDate', 'city', 'finalPrice', 'products'], display:['Shipping Date', 'Order Date', 'City', 'Final Price', 'Products']};
+				successHandler('orders', response.data.data);
 			});
 		}
 	}
 
-	$scope.initLogin = () =>$http.post('/login', {username:$scope.login.email, password:$scope.login.pass}).then(response=>successHandler('user', response)).catch(err=>errHnadler(err));
+	$scope.initLogin = () =>$http.post('/login', {username:$scope.login.email, password:$scope.login.pass}).then(response=>{
+		console.log(response.data.data);
+		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
+		successHandler('data', response.data.data);
+	}).catch(err=>errHnadler(err));
 
 	$scope.initSignup = () =>{
 		if($scope.signup.password !== $scope.signup.pass2){
@@ -38,6 +50,9 @@ app.controller('Login', ($scope, $http) => {
 			return;
 		}
 		const {username, password, fName, lName, city, street} = $scope.signup;
-		$http.post('/signup', {username, password, fName, lName, city, street, role:'customer'}).then(response=>successHandler('user', response)).catch(err=>errHnadler(err));
+		$http.post('/signup', {username, password, fName, lName, city, street, role:'customer'}).then(response=>{
+			console.log(response.data.user)
+			successHandler('user', response.data.user);
+		}).catch(err=>errHnadler(err));
 	}
 });

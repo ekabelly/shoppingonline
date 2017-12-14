@@ -1,5 +1,11 @@
 	<div class="container-fluid" ng-controller="Login">
 		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<h2> About </h2>
+				<p> about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about about</p>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-md-6">
 				<button ng-click="fetchOrders()" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseOrders" aria-expanded="false" aria-controls="collapseOrders">Our Orders</button>
 				<div class="collapse" id="collapseOrders">
@@ -21,19 +27,7 @@
 							</div>
 						</div>
 						<div  class="table">
-							<table-info data={{orders}} dataKeys={{orderKeys}} />
-<!-- 							<table class="table table-hover">
-								<tr>
-									<th>City</th>
-									<th>Shipping Date</th>
-									<th>Products</th>
-								</tr>
-								<tr ng-repeat="(key, val) in orders">
-									<td>{{val.city}}</td>
-									<td>{{val.shippingDate}}</td>
-									<td>{{val.products}}</td>
-								</tr>
-							</table> -->
+							<table-info data="orders" datakeys="orderKeys" />
 						</div>
 					</div>
 				</div>
@@ -60,7 +54,8 @@
 							</div>
 						</div>
 						<div class="table" ng-show=products>
-							<table class="table table-hover">
+							<table-info data="products" datakeys="productKeys" />
+							<!-- <table class="table table-hover">
 								<tr>
 									<th> name </th>
 									<th> price </th>
@@ -71,7 +66,7 @@
 									<td>{{val.price}}</td>
 									<td><img src={{val.picture}} width="30"></td>
 								</tr>
-							</table>
+							</table> -->
 						</div>
 
 					</div>

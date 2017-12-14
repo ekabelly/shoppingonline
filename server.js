@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const passportConfig = require('./auth/passport_config');
 const Route = require('./route/store');
 const {dburl, secret, cookieName} = require('./auth/config');
-const {fetchProducts, fetchOrders, responseMiddleware} = require('./db/mongo');
+const {fetchProducts, fetchOrders, responseMiddleware, fetchUserOrders} = require('./db/mongo');
 
 passport.use('local', new LocalStrategy(passportConfig.login));
 passport.use('local-sign', new LocalStrategy({
@@ -44,9 +44,9 @@ app.use(express.static('public'));
 app.get('/login', (req, res)=>res.redirect('/login.html'));
 app.get('/signup', (req, res)=>res.redirect('/signup.html'));
 
-app.post('/login', passport.authenticate('local'), (req, res)=>res.json({success:true, data:req.user}));
+app.post('/login', passport.authenticate('local'), fetchUserOrders, (req, res)=>res.json({success:true, data:{orders:req.data, user:{orders: req.data, fName:req.user.fName, lName:req.user.fName, orders: req.user.orders, role:req.user.role}}}));
 
-app.post('/signup', passport.authenticate('local-sign'), (req, res)=>res.json({success:true, data:req.user}));
+app.post('/signup', passport.authenticate('local-sign'), (req, res)=>res.json({success:true, user:{fName:req.user.fName, lName:req.user.fName, role:req.user.role}}));
 
 app.get('/logout', (req, res)=>{
   req.logout();

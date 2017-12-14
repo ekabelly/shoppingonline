@@ -1,6 +1,5 @@
 <div ng-controller="Login">
-  <div class="form" ng-hide="user"> 
-
+  <div class="form" ng-hide="data.user"> 
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-offset-1 col-md-10" id="login">   
@@ -29,10 +28,14 @@
       </div>
     </div><!-- tab-content -->
   </div> <!-- /form -->
-  <div ng-show="user">
-    <h1>Hello, {{user.fName}}</h1>
-    <div ng-show="user.orders">
-      <tableInfo data={{user.orders}} dataKeys={{Object.keys(user.orders[0])}} >
+  <div class="container-fluid" ng-show="data.user">
+    <div class="row">
+      <div class="col-md-offset-1 col-md-10">
+        <h1>Hello, {{data.user.fName}} </h1>
+        <div>
+          <table-info data="data.orders" datakeys="orderKeys" />
+        </div>
+      </div>
     </div>
   </div>
 </div>
