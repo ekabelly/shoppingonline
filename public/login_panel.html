@@ -1,9 +1,27 @@
 <div ng-controller="Login">
-  <div class="form" ng-hide="data.user"> 
+  <div ng-show="spinner">
+    <div class="sk-fading-circle">
+      <div class="sk-circle1 sk-circle"></div>
+      <div class="sk-circle2 sk-circle"></div>
+      <div class="sk-circle3 sk-circle"></div>
+      <div class="sk-circle4 sk-circle"></div>
+      <div class="sk-circle5 sk-circle"></div>
+      <div class="sk-circle6 sk-circle"></div>
+      <div class="sk-circle7 sk-circle"></div>
+      <div class="sk-circle8 sk-circle"></div>
+      <div class="sk-circle9 sk-circle"></div>
+      <div class="sk-circle10 sk-circle"></div>
+      <div class="sk-circle11 sk-circle"></div>
+      <div class="sk-circle12 sk-circle"></div>
+    </div>
+  </div>
+  <div class="form" ng-hide="spinner || user"> 
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-offset-1 col-md-10" id="login">   
-          <h1>Welcome Back!</h1>
+          <div class="centerText">
+            <h1>Welcome Back!</h1>
+          </div>
           <form class="form-horizontal">
             <div class="form-group">
               <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
@@ -20,7 +38,7 @@
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
                 <button ng-click="initLogin()" class="btn btn-default">Sign in</button>
-                 <p> {{err}} </p>
+                <p> {{err}} </p>
               </div>
             </div>
           </form>
@@ -28,12 +46,17 @@
       </div>
     </div><!-- tab-content -->
   </div> <!-- /form -->
-  <div class="container-fluid" ng-show="data.user">
+  <div class="container-fluid" ng-show="user">
     <div class="row">
       <div class="col-md-offset-1 col-md-10">
-        <h1>Hello, {{data.user.fName}} </h1>
+        <div class="centerText">
+          <h1>Hello, {{user.fName}} </h1>
+        </div>
         <div>
-          <table-info data="data.orders" datakeys="orderKeys" />
+          <table-info data="user.orders" datakeys="orderKeys" />
+        </div>
+        <div class="centerText">
+          <a href="../store" class="anchorBtn">Start Shopping!</a>
         </div>
       </div>
     </div>

@@ -11,11 +11,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-route.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/directives/tableinfo.js"></script>
     <script type="text/javascript" src="js/directives/textinput.js"></script>
     <script type="text/javascript" src="js/controllers/login.js"></script>
+    <script type="text/javascript" src="js/services/loginservices.js"></script>
 
 </head>
 <body>
@@ -31,9 +33,12 @@
                 <a class="navbar-brand" href="#!signup">Register</a>
                 <a class="navbar-brand" href="#!about">About Us</a>
             </div>
+            <div>
+                <a class="navbar-right navbar-brand" href="/logout">logout</a>
+            </div>
         </div>
     </nav>
     <div ng-view></div>
-	
+
 </body>
 </html>

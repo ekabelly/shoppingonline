@@ -1,5 +1,5 @@
 <div ng-controller="Login">
-  <div class="form" ng-hide="user"> 
+  <div class="form" ng-hide="newUser"> 
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-offset-1 col-md-10" id="login">   
@@ -51,7 +51,7 @@
       </div>
     </div><!-- tab-content -->
   </div> <!-- /form -->
-  <div ng-show="user">
+  <div class="centerText" ng-show="newUser">
     <h1>Welcome, {{user.fName}}</h1>
   </div>
 </div>

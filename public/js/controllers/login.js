@@ -1,14 +1,17 @@
 app.controller('Login', ($scope, $http) => {
-	$scope.user = false;
 	$scope.products = false;
-	$scope.user = false;
+	$scope.spinner = true;
 
 	$scope.tablefields = field =>{
 		console.log(field);
 		return field !== 'products' && field !== 'picture';
 	}
 
-	const successHandler = (req, res) =>$scope[req] = res;
+	const successHandler = (req, res) =>{
+		$scope[req] = res;
+		$scope.spinner = false;
+	}
+
 	const errHnadler = err =>{
 		if (err.status === 400) {
 			return $scope.err = 'Please Fill All The Fields Correctly';
@@ -18,6 +21,17 @@ app.controller('Login', ($scope, $http) => {
 		}
 		return $scope.err = err;
 	} 
+
+	const isAuthenticated = () =>$http.get('/user').then(res=>{
+		console.log(res.data.data)
+		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date/Start Shopping', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
+		successHandler('user', res.data.data);
+	}).catch(err=>{
+		$scope.user = false;
+		$scope.spinner = false;
+	});
+
+	isAuthenticated();
 
 	$scope.fetchProducts = () =>{
 		// console.log('fetchProducts');
@@ -39,9 +53,9 @@ app.controller('Login', ($scope, $http) => {
 	}
 
 	$scope.initLogin = () =>$http.post('/login', {username:$scope.login.email, password:$scope.login.pass}).then(response=>{
-		console.log(response.data.data);
-		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
-		successHandler('data', response.data.data);
+		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date/Start Shopping', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
+		successHandler('user', response.data.data);
+		// console.log(response.data.data)
 	}).catch(err=>errHnadler(err));
 
 	$scope.initSignup = () =>{
@@ -52,7 +66,7 @@ app.controller('Login', ($scope, $http) => {
 		const {username, password, fName, lName, city, street} = $scope.signup;
 		$http.post('/signup', {username, password, fName, lName, city, street, role:'customer'}).then(response=>{
 			console.log(response.data.user)
-			successHandler('user', response.data.user);
+			successHandler('newUser', response.data.user);
 		}).catch(err=>errHnadler(err));
 	}
 });

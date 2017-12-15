@@ -9,7 +9,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const passportConfig = require('./auth/passport_config');
 const Route = require('./route/store');
-const {dburl, secret, cookieName} = require('./auth/config');
+const {dburl, secret, cookieName, userResponse} = require('./auth/config');
 const {fetchProducts, fetchOrders, responseMiddleware, fetchUserOrders} = require('./db/mongo');
 
 passport.use('local', new LocalStrategy(passportConfig.login));
@@ -39,18 +39,18 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static('public'));
+app.use('/login', express.static('public'));
 
-app.get('/login', (req, res)=>res.redirect('/login.html'));
-app.get('/signup', (req, res)=>res.redirect('/signup.html'));
+// app.get('/login', (req, res)=>res.redirect('/login.html'));
+// app.get('/signup', (req, res)=>res.redirect('/signup.html'));
 
-app.post('/login', passport.authenticate('local'), fetchUserOrders, (req, res)=>res.json({success:true, data:{orders:req.data, user:{orders: req.data, fName:req.user.fName, lName:req.user.fName, orders: req.user.orders, role:req.user.role}}}));
+app.post('/login', passport.authenticate('local'), fetchUserOrders, userResponse);
 
 app.post('/signup', passport.authenticate('local-sign'), (req, res)=>res.json({success:true, user:{fName:req.user.fName, lName:req.user.fName, role:req.user.role}}));
 
 app.get('/logout', (req, res)=>{
   req.logout();
-  res.json({status:true, messege:'logout successfull'});
+  res.redirect('/login');
 });
 
 app.get('/products', fetchProducts, responseMiddleware);
@@ -59,9 +59,11 @@ app.get('/orders', fetchOrders, responseMiddleware);
 
 app.all('*', passportConfig.validatedUser);
 
-app.use(express.static('client'));
+app.get('/user', fetchUserOrders, userResponse);
 
-app.use('/store', Route);
+app.use('/store', express.static('client'));
+
+app.use('/store', Route, responseMiddleware);
 
 mongoose.connect(dburl, {useMongoClient: true}, err=>err?console.log(err):startServer());
 
