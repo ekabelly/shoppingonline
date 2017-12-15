@@ -1,4 +1,4 @@
-app.controller('Login', ($scope, $http) => {
+app.controller('Login', ($scope, $http, $cookies, Services) => {
 	$scope.products = false;
 	$scope.spinner = true;
 
@@ -68,5 +68,10 @@ app.controller('Login', ($scope, $http) => {
 			console.log(response.data.user)
 			successHandler('newUser', response.data.user);
 		}).catch(err=>errHnadler(err));
+	}
+
+	$scope.logout = () =>{
+		console.log('logout');
+		Services.logout();
 	}
 });
