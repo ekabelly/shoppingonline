@@ -1,8 +1,10 @@
 const express = require('express');
 const Router = express.Router();
-const {createCategory, createProduct, updateProduct, createOrder, fetchProductsByCategory, responseMiddleware, fetchProducts} = require('../db/mongo');
+const {createCategory, createProduct, updateProduct, createOrder, fetchProductsByCategory, responseMiddleware, fetchProducts, fetchCategories} = require('../db/mongo');
 
 Router.post('/products', fetchProducts, responseMiddleware);
+
+Router.get('/categories', fetchCategories, responseMiddleware);
 
 Router.put('/category', createCategory, responseMiddleware);
 

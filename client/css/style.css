@@ -1,6 +1,19 @@
 .FR {
   float: right;
 }
+
+.cardText {
+  list-style-type:none;
+  margin: 5px;
+}
+
+.carouselPic {
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
+  max-height: 400px;
+}
+
 .table {
   overflow: hidden;
   text-overflow: ellipsis;

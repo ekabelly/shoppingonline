@@ -14,6 +14,8 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-route.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/directives/card.js"></script>
+	<script type="text/javascript" src="js/controllers/store.js"></script>
 </head>
 <body ng-app="App" ng-controller="Store">
 	<header>
@@ -29,7 +31,92 @@
 		</nav>
 	</header>
 	<main>
-		
+		<div class="container-fluid" style="color: black;">
+			<div class="row">
+
+				<div class="col-md-2">
+					<ul>
+						<li ng-repeat="val in categories">{{val.name}}</li>
+					</ul>
+				</div>
+
+				<div class="col-md-8">
+					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+						<!-- Indicators -->
+						<ol class="carousel-indicators">
+							<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+							<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+							<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+							<li data-target="#carousel-example-generic" data-slide-to="3"></li>
+						</ol>
+
+						<!-- Wrapper for slides -->
+						<div class="carousel-inner" role="listbox">
+							<div class="item active col-md-6 col-md-offset-3 ">
+								<img src="{{promotion[0].src}}" width="400" class="carouselPic">
+								<div class="carousel-caption" style="font-size: 20px;">
+									{{promotion[0].name}} <br/>
+									{{promotion[0].price}}
+								</div>
+							</div>
+							<div class="item col-md-6 col-md-offset-3">
+								<img src="{{promotion[1].src}}" width="400"  class="carouselPic">
+								<div class="carousel-caption" style="font-size: 20px;">
+									{{promotion[1].name}} <br/>
+									{{promotion[1].price}}
+								</div>
+							</div>
+							<div class="item col-md-6 col-md-offset-3">
+								<img src="{{promotion[2].src}}" width="400" class="carouselPic">
+								<div class="carousel-caption" style="font-size: 20px;">
+									{{promotion[2].name}} <br/>
+									{{promotion[2].price}}
+								</div>
+							</div>
+							<div class="item col-md-6 col-md-offset-3">
+								<img src="{{promotion[3].src}}" width="400" class="carouselPic">
+								<div class="carousel-caption" style="font-size: 20px;">
+									{{promotion[3].name}} <br/>
+									{{promotion[3].price}}
+								</div>
+							</div>
+
+							<!-- Controls -->
+							<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+								<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+								<span class="sr-only">Previous</span>
+							</a>
+							<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+								<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+								<span class="sr-only">Next</span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<h3> Your Cart: </h3>
+					<table class="table table-hover">
+						<tr ng-repeat="product in cart.products">
+							<td>{{product.name}}</td>
+							<td>{{product.price}}</td>
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+						</tr>
+						<tr>
+							Total Price: {{cart.finalPrice}}
+						</tr>
+					</table>
+				</div>
+			</div> <br>
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1 container-fluid thumbnail">
+					<div class="row">
+						<div ng-repeat="product in navCategory">
+							<card data="product" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</main>
 </body>
 </html>

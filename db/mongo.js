@@ -44,9 +44,11 @@ const fetchProducts = (req, res, next) =>{
 	return Product.find(find).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 } 
 
+const fetchCategories = (req, res, next) => Category.find({}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data)=>errorHandler(err, res, () => successHandler(req, data, next)));
+
 const fetchOrders = (req, res, next) =>Order.find({}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
 const fetchUserOrders = (req, res, next) =>Order.find({userId: req.user._id}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () =>successHandler(req, data, next)));
 
-module.exports = {createCategory, createProduct, updateProduct, createOrder,fetchProducts, fetchOrders, fetchUserOrders, fetchProductsByCategory, responseMiddleware}
+module.exports = {createCategory, createProduct, updateProduct, createOrder,fetchProducts, fetchOrders, fetchCategories, fetchUserOrders, fetchProductsByCategory, responseMiddleware}
 
