@@ -1,3 +1,16 @@
+//$scope= {
+//	spinner: css spinner ng-if
+//	[req]: anything successHandler handles, such as user
+// user: the user thats using the system
+//	err: an err logging in atm
+//	orderKey: vale: the keys that are found in the order object. display: the value which wil be displayed at the table's th
+//	cart: the order/cart that is being handled atm
+//	categories: all the store categories and products.
+//	navCategory: an array of products. might be a category or search value.
+// promotion: an array of products being displayed in the carousel.
+// }
+
+
 app.controller('Store', ($scope, $http, $cookies) => {
 
 	const successHandler = (req, res, cb) =>{
@@ -39,6 +52,16 @@ app.controller('Store', ($scope, $http, $cookies) => {
 
 	const setCategory = () =>{
 		$scope.navCategory = $scope.categories[2].products;
+	}
+
+	$scope.changeCategory = i =>{
+		$scope.navCategory = $scope.categories[i].products;
+		console.log($scope.navCategory, i);
+	}
+
+	$scope.displayAllProducts = () =>{
+		$scope.navCategory = [];
+		$scope.categories.forEach(category=>$scope.navCategory = $scope.navCategory.concat(category.products));
 	}
 
 	$scope.promotion = [{name:'watch dogs', price:'60$', src:'https://i.pinimg.com/736x/3b/5d/22/3b5d22ba69dffe36bf1c1cf908195d4d--playstation--console-playstation-games.jpg'},

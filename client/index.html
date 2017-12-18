@@ -35,8 +35,9 @@
 			<div class="row">
 
 				<div class="col-md-2">
-					<ul>
-						<li ng-repeat="val in categories">{{val.name}}</li>
+					<ul class="nav nav-pills nav-stacked ">
+						<li ng-click="displayAllProducts()"><a href="#"> All Products </a></li>
+						<li ng-repeat="(i, val) in categories" ng-click="changeCategory(i)"><a href="#">{{val.name}}</a></li>
 					</ul>
 				</div>
 
@@ -94,22 +95,22 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<h3> Your Cart: </h3>
-					<table class="table table-hover">
-						<tr ng-repeat="product in cart.products">
-							<td>{{product.name}}</td>
-							<td>{{product.price}}</td>
-							<td><span class="glyphicon glyphicon-remove"></span></td>
-						</tr>
-						<tr>
-							Total Price: {{cart.finalPrice}}
-						</tr>
-					</table>
+					<h2> Your Cart: </h2>
+					<h3>Total Price: {{cart.finalPrice}}</h3>
+					<div style="height: 290px; overflow: auto;">
+						<table class="table table-hover">
+							<tr ng-repeat="product in cart.products">
+								<td>{{product.name}}</td>
+								<td>{{product.price}}</td>
+								<td><span class="glyphicon glyphicon-remove"></span></td>
+							</tr>
+						</table>
+					</div>
 				</div>
 			</div> <br>
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1 container-fluid thumbnail">
-					<div class="row">
+					<div class="row" style="padding: 50px;">
 						<div ng-repeat="product in navCategory">
 							<card data="product" />
 						</div>

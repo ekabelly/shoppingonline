@@ -1,11 +1,6 @@
 app.controller('Login', ($scope, $http, $cookies, Services) => {
-	$scope.products = false;
-	$scope.spinner = true;
 
-	$scope.tablefields = field =>{
-		console.log(field);
-		return field !== 'products' && field !== 'picture';
-	}
+	//general funtions
 
 	const successHandler = (req, res) =>{
 		$scope[req] = res;
@@ -22,8 +17,12 @@ app.controller('Login', ($scope, $http, $cookies, Services) => {
 		return $scope.err = err;
 	} 
 
+	const fetchItems = items =>$http.get('/'+items).then(response=>successHandler(items, response.data.data));
+
+
+
+
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
-		console.log(res.data.data)
 		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date/Start Shopping', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
 		successHandler('user', res.data.data);
 	}).catch(err=>{
@@ -31,24 +30,19 @@ app.controller('Login', ($scope, $http, $cookies, Services) => {
 		$scope.spinner = false;
 	});
 
-	isAuthenticated();
-
-	$scope.fetchProducts = () =>{
-		// console.log('fetchProducts');
-		if (!$scope.products) {
-			$http.get('/products').then(response=>{
-				$scope.productKeys = {value:['name', 'price', 'picture'], display:['Name', 'Price', 'Picture']}
-				successHandler('products', response.data.data);
-			});
-		}
+	const initPage = () =>{
+		$scope.products = false;
+		$scope.spinner = true;
+		$scope.productKeys = {value:['name', 'price', 'picture'], display:['Name', 'Price', 'Picture']};
+		$scope.orderKeys = {value:['shippingDate', 'orderDate', 'city', 'finalPrice', 'products'], display:['Shipping Date', 'Order Date', 'City', 'Final Price', 'Products']};
+		isAuthenticated();
 	}
 
-	$scope.fetchOrders = () =>{
-		if (!$scope.orders) {
-			$http.get('/orders').then(response=>{
-				$scope.orderKeys = {value:['shippingDate', 'orderDate', 'city', 'finalPrice', 'products'], display:['Shipping Date', 'Order Date', 'City', 'Final Price', 'Products']};
-				successHandler('orders', response.data.data);
-			});
+	initPage();
+	
+	$scope.clickEventFetchItems = items =>{
+		if (!$scope[items]) { 
+			fetchItems(items);
 		}
 	}
 
@@ -64,10 +58,8 @@ app.controller('Login', ($scope, $http, $cookies, Services) => {
 			return;
 		}
 		const {username, password, fName, lName, city, street} = $scope.signup;
-		$http.post('/signup', {username, password, fName, lName, city, street, role:'customer'}).then(response=>{
-			console.log(response.data.user)
-			successHandler('newUser', response.data.user);
-		}).catch(err=>errHnadler(err));
+		$http.post('/signup', {username, password, fName, lName, city, street, role:'customer'}).then(response=>
+			successHandler('newUser', response.data.user)).catch(err=>errHnadler(err));
 	}
 
 	$scope.logout = () =>{

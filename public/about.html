@@ -7,7 +7,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-6">
-				<button ng-click="fetchOrders()" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseOrders" aria-expanded="false" aria-controls="collapseOrders">Our Orders</button>
+				<button ng-click="clickEventFetchItems('orders')" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseOrders" aria-expanded="false" aria-controls="collapseOrders">Our Orders</button>
 				<div class="collapse" id="collapseOrders">
 					<div class="well">
 						<div ng-hide="orders">
@@ -34,7 +34,7 @@
 			</div>
 
 			<div class="col-md-6">	
-				<button ng-click="fetchProducts()" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">Our Products</button>
+				<button ng-click="clickEventFetchItems('products')" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">Our Products</button>
 				<div class="collapse" id="collapseProducts">
 					<div class="well">
 						<div ng-hide='products'>
