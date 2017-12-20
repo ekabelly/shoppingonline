@@ -8,7 +8,7 @@ const requiredString = {
 
 const OrderSchema = new Schema({
 	userId:requiredString,
-	finalPrice:String,
+	finalPrice:Number,
 	city:String,
 	street:String,
 	shippingDate:String,

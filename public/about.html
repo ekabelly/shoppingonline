@@ -26,8 +26,27 @@
 								<div class="sk-circle12 sk-circle"></div>
 							</div>
 						</div>
-						<div  class="table">
-							<table-info data="orders" datakeys="orderKeys" />
+						<div class="table" ng-show="orders">
+							<table class="table table-hover">
+								<tr>
+									<th> Shipping Date </th>
+									<th> Order Date </th>
+									<th> City </th>
+									<th> Final Price </th>
+									<th> Products </th>
+								</tr>
+								<tr ng-repeat="(key, val) in orders">
+									<td> {{val.shippingDate}} </td>
+									<td>{{val.orderDate}}</td>
+									<td>{{val.city}}</td>
+									<td>{{val.finalPrice}}$</td>
+									<td>
+										<ul>
+											<li ng-repeat="product in val.products">{{product.name}}</li>
+										</ul>
+									</td>
+								</tr>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -54,19 +73,18 @@
 							</div>
 						</div>
 						<div class="table" ng-show=products>
-							<table-info data="products" datakeys="productKeys" />
-							<!-- <table class="table table-hover">
+							<table class="table table-hover">
 								<tr>
-									<th> name </th>
-									<th> price </th>
-									<th> picture </th>
+									<th> Name </th>
+									<th> Price </th>
+									<th> Picture </th>
 								</tr>
 								<tr ng-repeat="(key, val) in products">
 									<td> {{val.name}} </td>
-									<td>{{val.price}}</td>
+									<td>{{val.price}}$</td>
 									<td><img src={{val.picture}} width="30"></td>
 								</tr>
-							</table> -->
+							</table>
 						</div>
 
 					</div>

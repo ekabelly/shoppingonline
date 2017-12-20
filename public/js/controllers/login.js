@@ -1,4 +1,4 @@
-app.controller('Login', ($scope, $http, $cookies, Services) => {
+app.controller('Login', ($scope, $http, $cookies) => {
 
 	//general funtions
 
@@ -19,11 +19,7 @@ app.controller('Login', ($scope, $http, $cookies, Services) => {
 
 	const fetchItems = items =>$http.get('/'+items).then(response=>successHandler(items, response.data.data));
 
-
-
-
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
-		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date/Start Shopping', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
 		successHandler('user', res.data.data);
 	}).catch(err=>{
 		$scope.user = false;
@@ -33,8 +29,6 @@ app.controller('Login', ($scope, $http, $cookies, Services) => {
 	const initPage = () =>{
 		$scope.products = false;
 		$scope.spinner = true;
-		$scope.productKeys = {value:['name', 'price', 'picture'], display:['Name', 'Price', 'Picture']};
-		$scope.orderKeys = {value:['shippingDate', 'orderDate', 'city', 'finalPrice', 'products'], display:['Shipping Date', 'Order Date', 'City', 'Final Price', 'Products']};
 		isAuthenticated();
 	}
 
@@ -47,7 +41,6 @@ app.controller('Login', ($scope, $http, $cookies, Services) => {
 	}
 
 	$scope.initLogin = () =>$http.post('/login', {username:$scope.login.email, password:$scope.login.pass}).then(response=>{
-		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date/Start Shopping', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
 		successHandler('user', response.data.data);
 		// console.log(response.data.data)
 	}).catch(err=>errHnadler(err));
@@ -60,10 +53,5 @@ app.controller('Login', ($scope, $http, $cookies, Services) => {
 		const {username, password, fName, lName, city, street} = $scope.signup;
 		$http.post('/signup', {username, password, fName, lName, city, street, role:'customer'}).then(response=>
 			successHandler('newUser', response.data.user)).catch(err=>errHnadler(err));
-	}
-
-	$scope.logout = () =>{
-		console.log('logout');
-		Services.logout();
 	}
 });

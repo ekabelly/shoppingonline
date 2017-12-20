@@ -34,14 +34,16 @@
 		<div class="container-fluid" style="color: black;">
 			<div class="row">
 
-				<div class="col-md-2">
+				<!-- category nav -->
+				<div class="col-md-2">  
 					<ul class="nav nav-pills nav-stacked ">
 						<li ng-click="displayAllProducts()"><a href="#"> All Products </a></li>
 						<li ng-repeat="(i, val) in categories" ng-click="changeCategory(i)"><a href="#">{{val.name}}</a></li>
 					</ul>
 				</div>
 
-				<div class="col-md-8">
+				<!-- carousel -->
+				<div class="col-md-7">
 					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 						<!-- Indicators -->
 						<ol class="carousel-indicators">
@@ -57,28 +59,28 @@
 								<img src="{{promotion[0].src}}" width="400" class="carouselPic">
 								<div class="carousel-caption" style="font-size: 20px;">
 									{{promotion[0].name}} <br/>
-									{{promotion[0].price}}
+									{{promotion[0].price}}$
 								</div>
 							</div>
 							<div class="item col-md-6 col-md-offset-3">
 								<img src="{{promotion[1].src}}" width="400"  class="carouselPic">
 								<div class="carousel-caption" style="font-size: 20px;">
 									{{promotion[1].name}} <br/>
-									{{promotion[1].price}}
+									{{promotion[1].price}}$
 								</div>
 							</div>
 							<div class="item col-md-6 col-md-offset-3">
 								<img src="{{promotion[2].src}}" width="400" class="carouselPic">
 								<div class="carousel-caption" style="font-size: 20px;">
 									{{promotion[2].name}} <br/>
-									{{promotion[2].price}}
+									{{promotion[2].price}}$
 								</div>
 							</div>
 							<div class="item col-md-6 col-md-offset-3">
 								<img src="{{promotion[3].src}}" width="400" class="carouselPic">
 								<div class="carousel-caption" style="font-size: 20px;">
 									{{promotion[3].name}} <br/>
-									{{promotion[3].price}}
+									{{promotion[3].price}}$
 								</div>
 							</div>
 
@@ -94,17 +96,24 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-2">
+
+				<!-- cart display -->
+				<div class="col-md-3" ng-if="productsDisp">
 					<h2> Your Cart: </h2>
-					<h3>Total Price: {{cart.finalPrice}}</h3>
-					<div style="height: 290px; overflow: auto;">
+					<h3>Total Price: {{cart.finalPrice}}$</h3>
+					<div style="height: 260px; overflow: auto;">
 						<table class="table table-hover">
-							<tr ng-repeat="product in cart.products">
-								<td>{{product.name}}</td>
-								<td>{{product.price}}</td>
-								<td><span class="glyphicon glyphicon-remove"></span></td>
+							<tr ng-repeat="product in productsDisp">
+								<td>{{product.val.name}}</td>
+								<td>{{product.val.price}}$</td>
+								<td><input ng-click="setFinalPrice()" type="number" ng-model="product.q" ng-model="product.q" style="width: 35px;" /></td>
+								<td><span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="top" title="Remove from Cart" ng-click="removeProduct(product.val.name)"></span></td>
 							</tr>
 						</table>
+					</div>
+					<div>
+						<button class="btn btn-default">Save</button>
+						<button class="btn btn-default">Finish</button>
 					</div>
 				</div>
 			</div> <br>
@@ -112,7 +121,7 @@
 				<div class="col-md-10 col-md-offset-1 container-fluid thumbnail">
 					<div class="row" style="padding: 50px;">
 						<div ng-repeat="product in navCategory">
-							<card data="product" />
+							<card />
 						</div>
 					</div>
 				</div>
