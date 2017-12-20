@@ -98,21 +98,21 @@
 				</div>
 
 				<!-- cart display -->
-				<div class="col-md-3" ng-if="productsDisp">
+				<div class="col-md-3">
 					<h2> Your Cart: </h2>
-					<h3>Total Price: {{cart.finalPrice}}$</h3>
+					<h3>Total Price: {{finalPrice}}$</h3>
 					<div style="height: 260px; overflow: auto;">
-						<table class="table table-hover">
+						<table class="table table-hover" ng-if="productsDisp">
 							<tr ng-repeat="product in productsDisp">
 								<td>{{product.val.name}}</td>
 								<td>{{product.val.price}}$</td>
 								<td><input ng-click="setFinalPrice()" type="number" ng-model="product.q" ng-model="product.q" style="width: 35px;" /></td>
-								<td><span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="top" title="Remove from Cart" ng-click="removeProduct(product.val.name)"></span></td>
+								<td><span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="top" title="Remove from Cart" ng-click="removeProduct(product.val._id)"></span></td>
 							</tr>
 						</table>
 					</div>
-					<div>
-						<button class="btn btn-default">Save</button>
+					<div ng-if="productsDisp">
+						<button class="btn btn-default" ng-click="saveCart()">Save</button>
 						<button class="btn btn-default">Finish</button>
 					</div>
 				</div>

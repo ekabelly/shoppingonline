@@ -34,7 +34,6 @@ app.controller('Store', ($scope, $http, $cookies) => {
 
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
 		console.log(res.data.data)
-		$scope.orderKeys = {value:['shippingDate','orderDate', 'city', 'street', 'finalPrice', 'products'], display:['Shipping Date/Start Shopping', 'Order Date', 'City', 'Street', 'Final Price', 'Products']};
 		successHandler('user', res.data.data, initCart);
 	}).catch(err=>{
 		console.log(err)
@@ -43,19 +42,20 @@ app.controller('Store', ($scope, $http, $cookies) => {
 	});
 
 	const initCart = () =>{
-		$scope.cart = $scope.user.orders.find(order=>$cookies.get('cart') === order._id);
-		//$scope.cart.products manipulation each products has products.q
-		filterProductsArr();
+		$scope.finalPrice = 0;
+		if($cookies.get('cart')){
+			$scope.cart = $scope.user.orders.find(order=>$cookies.get('cart') === order._id);
+			//$scope.cart.products manipulation each products has products.q
+			if($scope.cart) filterProductsArr();
+		}
 		fetchCategoreis();
 	}
 
 	const fetchCategoreis = () =>$http.get('/store/categories').then(res=>{
 		console.log(res.data.data);
 		$scope.categories = res.data.data;
-		setCategory();
+		$scope.displayAllProducts();
 	});
-
-	const setCategory = () =>$scope.navCategory = $scope.categories[2].products;
 
 	$scope.changeCategory = i =>$scope.navCategory = $scope.categories[i].products;
 
@@ -71,36 +71,40 @@ app.controller('Store', ($scope, $http, $cookies) => {
 		$scope.cart.products.forEach(product=>{
 			manageProductsDisp(product);
 		});
+		$scope.setFinalPrice();
 	}
 
 	const manageProductsDisp = product =>{
-		if($scope.productsDisp[product.name]){
-				$scope.productsDisp[product.name].q++;
+		if($scope.productsDisp[product._id]){
+				$scope.productsDisp[product._id].q++;
 			}else{
-				$scope.productsDisp[product.name] = {}
-				$scope.productsDisp[product.name].val = product;
-				$scope.productsDisp[product.name].q = 1;
+				$scope.productsDisp[product._id] = {}
+				$scope.productsDisp[product._id].val = product;
+				$scope.productsDisp[product._id].q = 1;
 			}
 	}
 
 	$scope.setFinalPrice = () =>{
 		$scope.change++;
 		const products = $scope.productsDisp;
-		$scope.cart.finalPrice = 0;
+		$scope.finalPrice = 0;
 		Object.keys(products).forEach(i=>{
-			$scope.cart.finalPrice += products[i].q * products[i].val.price;
+			$scope.finalPrice += products[i].q * products[i].val.price;
 			if (!products[i].q) {
 				delete $scope.productsDisp[i];
 			}
 		});
 	}
 
-	$scope.removeProduct = productName =>{
-		$scope.productsDisp[productName].q = 0;
+	$scope.removeProduct = id =>{
+		$scope.productsDisp[id].q = 0;
 		$scope.setFinalPrice();
 	}
 
 	$scope.addToCart = product =>{
+		if(!$scope.productsDisp){
+			$scope.productsDisp = {};
+		}
 		manageProductsDisp(product);
 		$scope.setFinalPrice();
 	}
@@ -109,9 +113,25 @@ app.controller('Store', ($scope, $http, $cookies) => {
 		if($scope.change === $scope.temp){
 			return;
 		}
-		//$scope.productsDisp.change = $scope.productsDisp.temp;
-		//setCart;
+		$scope.change = $scope.temp;
+		dispToCart();
 	}
+
+	const dispToCart = () =>{
+		const products = $scope.productsDisp;
+		$scope.cart.products = [];
+		// console.log(Object.keys(products));
+		Object.keys(products).forEach(id=>{
+			for (let i = 0; i < products[id].q; i++) {
+				$scope.cart.products.push(id);
+			}
+		});
+		$scope.cart.finalPrice = $scope.finalPrice;
+		delete $scope.cart._id;
+		setCart();
+	}
+
+	const setCart = () =>$http.put('/store/order', $scope.cart).then(res=>console.log(res)).catch(err=>console.log(err));
 
 	const initPgae = () =>{
 		$scope.promotion = promotion;

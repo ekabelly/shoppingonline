@@ -54,4 +54,8 @@ app.controller('Login', ($scope, $http, $cookies) => {
 		$http.post('/signup', {username, password, fName, lName, city, street, role:'customer'}).then(response=>
 			successHandler('newUser', response.data.user)).catch(err=>errHnadler(err));
 	}
+
+	$scope.cartHandler = id =>{
+		$cookies.put('cart', id, {path:'/'});
+	}
 });
