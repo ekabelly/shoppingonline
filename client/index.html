@@ -25,7 +25,7 @@
 					<a class="navbar-brand">hello, {{user.fName}} </a>
 				</div>
 				<div>
-					<a class="navbar-right navbar-brand" href="/logout">logout</a>
+					<a class="navbar-right navbar-brand" ng-click="logout()" href="/logout">logout</a>
 				</div>
 			</div>
 		</nav>
@@ -119,8 +119,13 @@
 			</div> <br>
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1 container-fluid thumbnail">
+					<div class="row">
+						<div class="col-md-2 col-md-offset-5">
+							<input class="form-control" type="search" placeholder="search" ng-model="search">
+						</div>
+					</div>
 					<div class="row" style="padding: 50px;">
-						<div ng-repeat="product in navCategory">
+						<div ng-repeat="product in navCategory | filter:search">
 							<card />
 						</div>
 					</div>

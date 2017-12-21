@@ -15,8 +15,8 @@ app.directive('card', ()=> {
 						<div class="card-block"> 
 							<span class="card-text">
 								<ul class="list-group list-group-flush"> 
-									<li class="cardText"> Name: {{product.name}} </li>
-									<li class="cardText"> Price: {{product.price}}$ </li>
+									<li class="cardText"> <strong>Name:</strong> {{product.name}} </li>
+									<li class="cardText"> <strong>Price:</strong> {{product.price}}$ </li>
 								</ul>
 							</span>
 						</div>

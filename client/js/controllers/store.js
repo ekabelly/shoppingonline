@@ -78,9 +78,10 @@ app.controller('Store', ($scope, $http, $cookies) => {
 		if($scope.productsDisp[product._id]){
 				$scope.productsDisp[product._id].q++;
 			}else{
-				$scope.productsDisp[product._id] = {}
-				$scope.productsDisp[product._id].val = product;
-				$scope.productsDisp[product._id].q = 1;
+				$scope.productsDisp[product._id] = {
+					val:product,
+					q: 1
+				}
 			}
 	}
 
@@ -90,9 +91,7 @@ app.controller('Store', ($scope, $http, $cookies) => {
 		$scope.finalPrice = 0;
 		Object.keys(products).forEach(i=>{
 			$scope.finalPrice += products[i].q * products[i].val.price;
-			if (!products[i].q) {
-				delete $scope.productsDisp[i];
-			}
+			if (!products[i].q) delete $scope.productsDisp[i];
 		});
 	}
 
@@ -102,9 +101,7 @@ app.controller('Store', ($scope, $http, $cookies) => {
 	}
 
 	$scope.addToCart = product =>{
-		if(!$scope.productsDisp){
-			$scope.productsDisp = {};
-		}
+		if(!$scope.productsDisp) $scope.productsDisp = {};
 		manageProductsDisp(product);
 		$scope.setFinalPrice();
 	}
@@ -119,24 +116,28 @@ app.controller('Store', ($scope, $http, $cookies) => {
 
 	const dispToCart = () =>{
 		const products = $scope.productsDisp;
+		if (!$scope.cart) $scope.cart = {userId:$scope.user._id};
+		delete $scope.cart._id;
 		$scope.cart.products = [];
-		// console.log(Object.keys(products));
 		Object.keys(products).forEach(id=>{
 			for (let i = 0; i < products[id].q; i++) {
 				$scope.cart.products.push(id);
 			}
 		});
 		$scope.cart.finalPrice = $scope.finalPrice;
-		delete $scope.cart._id;
 		setCart();
 	}
 
-	const setCart = () =>$http.put('/store/order', $scope.cart).then(res=>console.log(res)).catch(err=>console.log(err));
+	const setCart = () =>$http.put('/store/order', $scope.cart).then(res=>{
+		$cookies.put('cart', res.data.data._id);
+	}).catch(err=>$scope.err = err);
 
 	const initPgae = () =>{
 		$scope.promotion = promotion;
 		isAuthenticated();
 	}
+
+	$scope.logout = () =>$cookies.remove('cart');
 
 	initPgae();
 

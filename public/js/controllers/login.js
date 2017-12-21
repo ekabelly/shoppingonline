@@ -55,7 +55,6 @@ app.controller('Login', ($scope, $http, $cookies) => {
 			successHandler('newUser', response.data.user)).catch(err=>errHnadler(err));
 	}
 
-	$scope.cartHandler = id =>{
-		$cookies.put('cart', id, {path:'/'});
-	}
+	$scope.cartHandler = id =>$cookies.put('cart', id, {path:'/'});
+	
 });
