@@ -14,7 +14,7 @@ const promotion = [{name:'watch dogs', price:'60$', src:'https://i.pinimg.com/73
 	{name:'Doom 2017', price:'60$', src:'https://multimedia.bbycastatic.ca/multimedia/products/500x500/103/10380/10380094.jpg'},
 	{name:'dishonored: death of the outsider', price:'60$', src:'https://pcgames-download.com/wp-content/uploads/2017/09/Dishonored-Death-of-the-Outsider-PC-2017.jpg'}];
 
-app.controller('Store', ($scope, $http, $cookies) => {
+app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
 	const successHandler = (req, res, cb) =>{
 		$scope[req] = res;
@@ -77,12 +77,12 @@ app.controller('Store', ($scope, $http, $cookies) => {
 	const manageProductsDisp = product =>{
 		if($scope.productsDisp[product._id]){
 				$scope.productsDisp[product._id].q++;
-			}else{
-				$scope.productsDisp[product._id] = {
-					val:product,
-					q: 1
-				}
+		}else{
+			$scope.productsDisp[product._id] = {
+				val:product,
+				q: 1
 			}
+		}
 	}
 
 	$scope.setFinalPrice = () =>{
@@ -107,37 +107,55 @@ app.controller('Store', ($scope, $http, $cookies) => {
 	}
 
 	$scope.saveCart = () =>{
-		if($scope.change === $scope.temp){
-			return;
-		}
+		if($scope.change === $scope.temp) return;
 		$scope.change = $scope.temp;
 		dispToCart();
 	}
 
 	const dispToCart = () =>{
 		const products = $scope.productsDisp;
-		if (!$scope.cart) $scope.cart = {userId:$scope.user._id};
-		delete $scope.cart._id;
-		$scope.cart.products = [];
+		$scope.cart = {
+			userId:$scope.user._id,
+			products: [],
+			finalPrice: $scope.finalPrice,
+			orderDate: new Date()
+		};
 		Object.keys(products).forEach(id=>{
 			for (let i = 0; i < products[id].q; i++) {
 				$scope.cart.products.push(id);
 			}
 		});
-		$scope.cart.finalPrice = $scope.finalPrice;
 		setCart();
 	}
 
-	const setCart = () =>$http.put('/store/order', $scope.cart).then(res=>{
-		$cookies.put('cart', res.data.data._id);
-	}).catch(err=>$scope.err = err);
+	const setCart = () =>{
+		if ($cookies.get('cart')) return patchOrder($cookies.get('cart'));
+		return putOrder();
+	}
+
+	const createCookie = (key, val) =>$cookies.put(key, val);
+
+	const patchOrder = id =>$http.patch('/store/'+id+'/order', $scope.cart).then(res=>orderSuccess()).catch(err=>errHnadler(err));
+
+	const putOrder = () =>$http.put('/store/order', $scope.cart).then(res=>{
+		createCookie('cart', res.data.data._id);
+		orderSuccess();
+	}).catch(err=>errHnadler(err));
+
+	const orderSuccess = () =>{
+		$scope.orderSuccess = true;
+		$timeout(()=>$scope.orderSuccess = false, 2500);
+	}
 
 	const initPgae = () =>{
 		$scope.promotion = promotion;
 		isAuthenticated();
 	}
 
-	$scope.logout = () =>$cookies.remove('cart');
+	$scope.logout = () =>{
+		$cookies.remove('cart', {path:'/'});
+		$cookies.remove('cart');
+	}
 
 	initPgae();
 

@@ -34,6 +34,7 @@ const createOrder = (req, res, next) =>{
 	saveNewItem(req, res, next);
 }
 
+const updateOrder = (req, res, next) => Order.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
 const updateProduct = (req, res, next) => Product.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
@@ -50,5 +51,5 @@ const fetchOrders = (req, res, next) =>Order.find({}).populate({path:POPULATE_FI
 
 const fetchUserOrders = (req, res, next) =>Order.find({userId: req.user._id}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () =>successHandler(req, data, next)));
 
-module.exports = {createCategory, createProduct, updateProduct, createOrder,fetchProducts, fetchOrders, fetchCategories, fetchUserOrders, fetchProductsByCategory, responseMiddleware}
+module.exports = {createCategory, createProduct, updateProduct, createOrder, updateOrder, fetchProducts, fetchOrders, fetchCategories, fetchUserOrders, fetchProductsByCategory, responseMiddleware}
 
