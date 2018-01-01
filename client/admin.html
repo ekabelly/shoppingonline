@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>welcome to my cool store!</title>
+	<script
+	src="https://code.jquery.com/jquery-3.2.1.min.js"
+	integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-route.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/directives/editcard.js"></script>
+	<script type="text/javascript" src="js/controllers/admin.js"></script>
+</head>
+<body ng-app="App" ng-controller="Admin">
+	<header>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand">hello, {{user.fName}} </a>
+				</div>
+				<div>
+					<a class="navbar-right navbar-brand" ng-click="logout()" href="/logout">logout</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div>
+		<div>
+			<div class="container-fluid" style="color: black;">
+				<div class="row">
+
+					<!-- category nav -->
+					<div class="col-md-2">  
+						<ul class="nav nav-pills nav-stacked ">
+							<li ng-click="displayAllProducts()"><a> All Products </a></li>
+							<li ng-repeat="(i, val) in categories" ng-click="changeCategory(i)"><a>{{val.name}}</a></li>
+						</ul>
+					</div>
+					<div class="col-md-10 container-fluid thumbnail">
+						<div class="row">
+							<div class="col-md-2 col-md-offset-5">
+								<input class="form-control" type="search" placeholder="search" ng-model="search">
+							</div>
+						</div>
+						<div class="row" style="padding: 50px;">
+							<div ng-repeat="product in navCategory | filter:search">
+								<card />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

@@ -5,5 +5,7 @@ app.config($routeProvider => {
 		templateUrl: 'store.html'
 	}).when('/finish', {
 		templateUrl: 'finish.html'
+	}).when('/thanks', {
+		templateUrl: 'thanks.html'
 	});
 });

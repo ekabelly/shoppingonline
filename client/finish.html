@@ -6,16 +6,6 @@
 					<form class="form-horizontal">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="fName" class="col-sm-2 control-label">First Name</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" ng-model="signup.fName" id="fName" placeholder="First Name" required>
-								</div>
-								<label for="lName" class="col-sm-2 control-label">Last Name</label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control" ng-model="signup.lName" id="lName" placeholder="Last Name" required>
-								</div>
-							</div>
-							<div class="form-group">
 								<label for="city" class="col-sm-2 control-label">City</label>
 								<div class="col-sm-4">
 									<input type="text" ng-model="cart.city" class="form-control" id="city" placeholder="City">
@@ -28,12 +18,16 @@
 							<div class="form-group">
 								<label for="shippingDate" class="col-sm-2 control-label">Shipping Date</label>
 								<div class="col-sm-4">
-									<input type="date" ng-model="cart.shippingDate" class="form-control" id="shippingDate" min="cart.orderDate">
+									<input type="date" ng-change="log()" ng-model="data.shippingDate" class="form-control" id="shippingDate">
 								</div>
 								<label for="orderDate" class="col-sm-2 control-label"> Order Date</label>
 								<div class="col-sm-4">
-									<input type="date" ng-model="cart.orderDate" class="form-control" id="orderDate" disabled>
+									<input type="date" ng-model="data.orderDate" class="form-control" id="orderDate" disabled>
 								</div>
+							</div>
+							<div>
+								<h2> Total Price: {{cart.finalPrice}}$</h2>
+								<!-- {{cart}} -->
 							</div> <br/>
 							<div class="form-group">
 								<div class="col-sm-10">
@@ -46,15 +40,15 @@
 											</tr>
 											<tr ng-repeat="val in cart.products">
 												<td> {{val.name}} </td>
-												<td>{{val.price}}$</td>
+												<td> {{val.price}}$ </td>
 												<td><img src={{val.picture}} width="30"></td>
 											</tr>
 										</table>
 									</div>
 								</div>
 								<div class="col-sm-2">
-									<button ng-click="saveCart()" class="btn btn-default">Order Now!</button>
-									<p> {{err}} </p>
+									<button ng-click="orderNow()" class="btn btn-default">Order Now!</button>
+									<p ng-if="err" style="color: red;"> {{err}} </p>
 								</div>
 							</form>
 						</div>

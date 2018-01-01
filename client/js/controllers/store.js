@@ -10,9 +10,9 @@
 // promotion: an array of products being displayed in the carousel.
 // }
 const promotion = [{name:'watch dogs', price:'60$', src:'https://i.pinimg.com/736x/3b/5d/22/3b5d22ba69dffe36bf1c1cf908195d4d--playstation--console-playstation-games.jpg'},
-	{name:'Batman: Arkham Knight', price:'60$', src:'https://multimedia.bbycastatic.ca/multimedia/products/1500x1500/102/10207/10207566.jpg'},
-	{name:'Doom 2017', price:'60$', src:'https://multimedia.bbycastatic.ca/multimedia/products/500x500/103/10380/10380094.jpg'},
-	{name:'dishonored: death of the outsider', price:'60$', src:'https://pcgames-download.com/wp-content/uploads/2017/09/Dishonored-Death-of-the-Outsider-PC-2017.jpg'}];
+{name:'Batman: Arkham Knight', price:'60$', src:'https://multimedia.bbycastatic.ca/multimedia/products/1500x1500/102/10207/10207566.jpg'},
+{name:'Doom 2017', price:'60$', src:'https://multimedia.bbycastatic.ca/multimedia/products/500x500/103/10380/10380094.jpg'},
+{name:'dishonored: death of the outsider', price:'60$', src:'https://pcgames-download.com/wp-content/uploads/2017/09/Dishonored-Death-of-the-Outsider-PC-2017.jpg'}];
 
 app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
@@ -35,6 +35,7 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
 		console.log(res.data.data)
 		successHandler('user', res.data.data, initCart);
+
 	}).catch(err=>{
 		console.log(err)
 		$scope.user = false;
@@ -44,15 +45,24 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 	const initCart = () =>{
 		$scope.finalPrice = 0;
 		if($cookies.get('cart')){
-			$scope.cart = $scope.user.orders.find(order=>$cookies.get('cart') === order._id);
-			//$scope.cart.products manipulation each products has products.q
-			if($scope.cart) filterProductsArr();
+			findCart(); //instead of using fetchCart and doing an http req to server, using the data that is already on the client
+			if($scope.cart){
+				filterProductsArr();
+				// console.log($scope.cart);
+			}
 		}
 		fetchCategoreis();
 	}
 
+	const findCart = () =>{
+		$scope.cart = $scope.user.orders.find(order=>$cookies.get('cart') === order._id);
+		transformDate('orderDate');
+	}
+
+	const transformDate = dateType =>$scope.data[dateType] = new Date($scope.cart[dateType]);
+
 	const fetchCategoreis = () =>$http.get('/store/categories').then(res=>{
-		console.log(res.data.data);
+		// console.log(res.data.data);
 		$scope.categories = res.data.data;
 		$scope.displayAllProducts();
 	});
@@ -76,7 +86,7 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
 	const manageProductsDisp = product =>{
 		if($scope.productsDisp[product._id]){
-				$scope.productsDisp[product._id].q++;
+			$scope.productsDisp[product._id].q++;
 		}else{
 			$scope.productsDisp[product._id] = {
 				val:product,
@@ -112,13 +122,24 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		dispToCart();
 	}
 
+	$scope.orderNow = () =>{
+		if ($scope.data.shippingDate) {
+			$scope.cart.shippingDate = new Date($scope.data.shippingDate);
+		}
+		if(validateCart()){
+			patchOrder($cookies.get('cart'), ()=>{
+				window.location.assign('/store/#!/thanks');
+			});
+		}
+	}
+
 	const dispToCart = () =>{
 		const products = $scope.productsDisp;
 		$scope.cart = {
 			userId:$scope.user._id,
 			products: [],
 			finalPrice: $scope.finalPrice,
-			orderDate: new Date()
+			orderDate: Date.now()
 		};
 		Object.keys(products).forEach(id=>{
 			for (let i = 0; i < products[id].q; i++) {
@@ -130,26 +151,46 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
 	const setCart = () =>{
 		if ($cookies.get('cart')) return patchOrder($cookies.get('cart'));
-		return putOrder();
+		putOrder();
+	}
+
+	const validateCart = () =>{
+		const cart = $scope.cart;
+		if(cart.shippingDate && cart.street && cart.city){
+			$scope.err = false;
+			return true;
+		} 
+		$scope.err = 'please fill all the fields Correctly';
+		return false;
 	}
 
 	const createCookie = (key, val) =>$cookies.put(key, val);
 
-	const patchOrder = id =>$http.patch('/store/'+id+'/order', $scope.cart).then(res=>orderSuccess()).catch(err=>errHnadler(err));
+	const patchOrder = (id, cb) =>$http.patch('/store/'+id+'/order', $scope.cart).then(res=>{
+		orderSuccess(id);
+		if(cb) cb();
+	}).catch(err=>errHnadler(err));
 
 	const putOrder = () =>$http.put('/store/order', $scope.cart).then(res=>{
 		createCookie('cart', res.data.data._id);
-		orderSuccess();
+		orderSuccess(res.data.data._id);
 	}).catch(err=>errHnadler(err));
 
-	const orderSuccess = () =>{
+	const orderSuccess = id =>{
+		fetchOrder(id);
 		$scope.orderSuccess = true;
 		$timeout(()=>$scope.orderSuccess = false, 2500);
 	}
 
+	const fetchOrder = id =>$http.get('/store/'+id+'/order').then(res=>{
+		successHandler('cart', res.data.data[0]);
+		transformDate('orderDate');
+	}).catch(err=>errHnadler(err));
+
 	const initPgae = () =>{
+		$scope.data = {};
 		$scope.promotion = promotion;
-		isAuthenticated();
+		isAuthenticated(); 
 	}
 
 	$scope.logout = () =>{

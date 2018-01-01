@@ -37,6 +37,20 @@ const passportHandlers = {
       return next();
     }
     return res.sendStatus(401);
+  },
+  validateAdmin: (req, res, next) => {
+    User.findOne({email:req.user.email}, (err, user) => {
+      if (err) {
+        return res.json(err);
+      } 
+      if (!user) {
+        return res.json({message: 'User not found'});
+      }
+      if (user.role === 'admin') {
+        return next();
+      }
+      return res.sendStatus(401);
+    }); 
   }
 }
 

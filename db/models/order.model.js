@@ -11,8 +11,8 @@ const OrderSchema = new Schema({
 	finalPrice:Number,
 	city:String,
 	street:String,
-	shippingDate:String,
-	orderDate:String,
+	shippingDate:Date,
+	orderDate:Date,
 	lastDigits:String,
 	products:[{type:Schema.Types.ObjectId, ref:'Product'}]
 });

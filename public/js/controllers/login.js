@@ -2,6 +2,10 @@ app.controller('Login', ($scope, $http, $cookies) => {
 
 	//general funtions
 
+	const adminHandler = role =>{
+		if (role === 'admin') $http.post('/admin', {email:$scope.login.email}).then(x=>console.log(x)).catch(err=>console.log(err));
+	}
+
 	const successHandler = (req, res) =>{
 		$scope[req] = res;
 		$scope.spinner = false;
@@ -21,6 +25,7 @@ app.controller('Login', ($scope, $http, $cookies) => {
 
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
 		successHandler('user', res.data.data);
+		// adminHandler(res.data.data.role);
 	}).catch(err=>{
 		$scope.user = false;
 		$scope.spinner = false;
@@ -43,6 +48,7 @@ app.controller('Login', ($scope, $http, $cookies) => {
 	$scope.initLogin = () =>$http.post('/login', {username:$scope.login.email, password:$scope.login.pass}).then(response=>{
 		successHandler('user', response.data.data);
 		// console.log(response.data.data)
+		// adminHandler(response.data.data.role);
 	}).catch(err=>errHnadler(err));
 
 	$scope.initSignup = () =>{

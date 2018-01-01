@@ -9,6 +9,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const passportConfig = require('./auth/passport_config');
 const Route = require('./route/store');
+const AdminRoute = require('./route/admin');
 const {dburl, secret, cookieName, userResponse} = require('./auth/config');
 const {fetchProducts, fetchOrders, responseMiddleware, fetchUserOrders} = require('./db/mongo');
 
@@ -63,7 +64,11 @@ app.get('/user', fetchUserOrders, userResponse);
 
 app.use('/store', express.static('client'));
 
-app.use('/store', Route, responseMiddleware);
+app.use('/store', Route);
+
+app.all('*', passportConfig.validateAdmin);
+
+app.use('/admin', AdminRoute);
 
 mongoose.connect(dburl, {useMongoClient: true}, err=>err?console.log(err):startServer());
 
