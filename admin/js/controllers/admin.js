@@ -11,8 +11,10 @@ app.controller('Admin', ($scope, $http) => {
 		if (err.status === 401) {
 			return $scope.err[errType] = 'You Are Not Authorized. Please Relog.';
 		}
-		return $scope.err[errType] = err.data.messege;
+		return $scope.err[errType] = err;
 	}
+
+	const errOffHandler = errType =>$scope.err[errType] = '';
 
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
 		// console.log(res.data.data)
@@ -50,19 +52,35 @@ app.controller('Admin', ($scope, $http) => {
 
 	$scope.patchProduct = product =>$http.patch(product._id+'/product', product).then(res=>console.log(res)).catch(err=>errHnadler(err, 'newProduct'));
 
-	$scope.putCategory = () =>$http.put('/admin/category', {name:$scope.data.newCategory}).then(res=>{
-		console.log(res);
-		$scope.newCategory = '';
-		fetchCategoreis();
-	}).catch(err=>errHnadler(err, 'newCategory'));
+	$scope.putCategory = () =>{
+		if (!$scope.data.newCategory) return errHnadler('Please Fill All Fields', 'newCategory'); 
+		$http.put('/admin/category', {name:$scope.data.newCategory}).then(res=>{
+			$scope.newCategory = ''; 
+			putSuccessHandler('newCategory');
+		}).catch(err=>errHnadler(err, 'newCategory'));
+	}
 
 	$scope.putProduct = () =>{
-		console.log($scope.data.newProduct);
+		if(categoryHandler()) return;
 		$http.put('/admin/product', $scope.data.newProduct).then(res=>{
-			console.log(res);
 			$scope.data.newProduct = {};
-			fetchCategoreis();
+			putSuccessHandler('newProduct');
 		}).catch(err=>errHnadler(err, 'newProduct'));
+	}
+
+	const putSuccessHandler = errType =>{
+		errOffHandler(errType);
+		fetchCategoreis();
+	}
+
+	const categoryHandler = () =>{
+		if (!$scope.data.newProduct.categoryName || !$scope.data.newProduct.name || !$scope.data.newProduct.price) {
+			errHnadler('Please Fill All Fields', 'newProduct');
+			return true;
+		}
+		const category = $scope.categories.find(category=>category.name === $scope.data.newProduct.categoryName);
+		$scope.data.newProduct.categoryId = category._id;
+		return false
 	}
 
 	const initPgae = () =>{
