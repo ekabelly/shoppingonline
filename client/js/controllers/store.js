@@ -35,7 +35,6 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
 		console.log(res.data.data)
 		successHandler('user', res.data.data, initCart);
-
 	}).catch(err=>{
 		console.log(err)
 		$scope.user = false;
@@ -64,14 +63,20 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 	const fetchCategoreis = () =>$http.get('/store/categories').then(res=>{
 		// console.log(res.data.data);
 		$scope.categories = res.data.data;
-		$scope.displayAllProducts();
+		makeAllProductsArr($scope.displayAllProducts);
 	});
 
 	$scope.changeCategory = i =>$scope.navCategory = $scope.categories[i].products;
 
+	const makeAllProductsArr = cb =>{
+		$scope.allProducts = [];
+		$scope.categories.forEach(category=>$scope.allProducts = [...$scope.allProducts, ...category.products]);
+		if (cb) cb();
+	}
+
 	$scope.displayAllProducts = () =>{
 		$scope.navCategory = [];
-		$scope.categories.forEach(category=>$scope.navCategory = $scope.navCategory.concat(category.products));
+		$scope.navCategory = [...$scope.allProducts];
 	}
 
 	const filterProductsArr = () =>{

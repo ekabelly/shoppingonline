@@ -68,6 +68,8 @@ app.use('/store', Route);
 
 app.all('*', passportConfig.validateAdmin);
 
+app.use('/admin', express.static('admin'));
+
 app.use('/admin', AdminRoute);
 
 mongoose.connect(dburl, {useMongoClient: true}, err=>err?console.log(err):startServer());

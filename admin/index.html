@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>welcome to my cool store!</title>
+	<title> Edit Store </title>
 	<script
 	src="https://code.jquery.com/jquery-3.2.1.min.js"
 	integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -34,15 +34,69 @@
 		<div>
 			<div class="container-fluid" style="color: black;">
 				<div class="row">
-
 					<!-- category nav -->
-					<div class="col-md-2">  
+					<div class="col-md-2 rightBorder">  
 						<ul class="nav nav-pills nav-stacked ">
 							<li ng-click="displayAllProducts()"><a> All Products </a></li>
 							<li ng-repeat="(i, val) in categories" ng-click="changeCategory(i)"><a>{{val.name}}</a></li>
 						</ul>
 					</div>
-					<div class="col-md-10 container-fluid thumbnail">
+					<div class="col-md-4">
+						<div>
+							<h4 class="centerText"> Create Category </h4><br/>
+						</div>
+						<div class="form-group">
+							<label for="categoryName">Category Name:</label>
+							<input id="categoryName" type="text" class="form-control" placeholder="Category Name" ng-model="data.newCategory" />
+						</div>
+						<div>
+							<button class="btn btn-default" ng-click="putCategory()">Save <span class="glyphicon glyphicon-floppy-save"></span></button>
+							<p ng-if="err.newCategory" class="err">{{err.newCategory}}</p>
+						</div>
+					</div>
+					<div class="col-md-6 leftBorder">
+						<div>
+							<h4 class="centerText"> Create Product </h4><br/>
+						</div>
+						<div class="form-group container-fluid">
+							<div class="row">
+								<div class="col-md-6">
+									<label for="productName">Product Name:</label>
+									<input id="productName" type="text" class="form-control" placeholder="Product Name" ng-model="data.newProduct.name" />
+								</div>
+								<div class="col-md-6">
+									<label for="productPrice">Product Price $:</label>
+									<input id="productPrice" type="number" class="form-control" placeholder="Product Price $" ng-model="data.newProduct.price" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group container-fluid">
+							<div class="row">
+								<div class="col-md-6">
+									<label>Category:</label>
+									<select class="form-control" ng-model="data.newProduct.categoryId">
+										<option ng-repeat="category in categories">{{category.name}}</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label for="productPicture">Product Picture:</label>
+									<input id="productPicture" type="text" class="form-control" placeholder="Product Picture" ng-model="data.newProduct.picture" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group container-fluid">
+							<div class="row">
+								<div class="col-md-12">
+									<img width="600" src="{{data.newProduct.picture}}">
+								</div>
+							</div>
+						</div>
+						<div>
+							<button class="btn btn-default" ng-click="putProduct()">Save  <span class="glyphicon glyphicon-floppy-save"></span></button>
+							<p ng-if="err.newProduct" class="err">{{err.newProduct}}</p>
+						</div><br/>
+					</div>
+					<div class="col-md-12 container-fluid thumbnail">
 						<div class="row">
 							<div class="col-md-2 col-md-offset-5">
 								<input class="form-control" type="search" placeholder="search" ng-model="search">
