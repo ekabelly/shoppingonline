@@ -19,7 +19,7 @@
 </head>
 <body ng-app="App" ng-controller="Store">
 	<header>
-		<nav class="navbar navbar-default">
+		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<a class="navbar-brand">hello, {{user.fName}} </a>
@@ -30,7 +30,7 @@
 			</div>
 		</nav>
 	</header>
-	<main ng-view>
+	<main class="headerSpace" ng-view>
 		
 	</main>
 </body>

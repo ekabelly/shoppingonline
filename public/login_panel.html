@@ -64,7 +64,7 @@
                 <th> Products </th>
               </tr>
               <tr ng-repeat="(key, val) in user.orders">
-                <td ng-if="!val.shippingDate"><a ng-click="cartHandler(val['_id'])" href="../store"> Start Shopping With This Order </a></td>
+                <td ng-if="!val.shippingDate"><a ng-click="cartHandler(val['_id'])" href="/store"> Start Shopping With This Order </a></td>
                 <td ng-if="val.shippingDate">{{val.shippingDate}}</td>
                 <td>{{val.orderDate}}</td>
                 <td>{{val.city}}</td>
@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="centerText">
-          <a href="../store" class="anchorBtn">Start Shopping!</a>
+          <a href="/store" class="anchorBtn">Start Shopping!</a>
           <a class="anchorBtn" ng-if="user.role === 'admin'" href="/admin">Edit Store</a>
         </div>
       </div>

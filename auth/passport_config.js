@@ -1,12 +1,15 @@
 const User = require('../db/models/user.model');
+const crypto = require('crypto');
+const {secret} = require('./config');
 
 const mongoose = require('mongoose');
 
 const passportHandlers = {
+  passToCrypto:pass=>crypto.createHmac('sha256', secret).update(pass).digest('hex'),
   signup: (req, email, pass, done) => {
     //req.body contains all form fields from the signup form
     req.body.email = email;
-    req.body.pass = pass;
+    req.body.pass = passportHandlers.passToCrypto(pass);
     const user = new User(req.body);
     user.save((err, user) => {
       if (err) {
@@ -16,7 +19,6 @@ const passportHandlers = {
     });
   },
   login: (email, pass, done) => {
-  	// console.log(email, pass, done);
     User.findOne({email}, (err, user) => {
       if (err) {
         return done(err);
@@ -24,7 +26,7 @@ const passportHandlers = {
       if (!user) {
         return done(null, false, {message: 'User not found'});
       }
-      if (user.pass !== pass) {
+      if (user.pass !== passportHandlers.passToCrypto(pass)) {
         return done(null, false, {message: 'Incorrect pass'});
       }
       return done(null, user);

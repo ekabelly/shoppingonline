@@ -1,0 +1,14 @@
+{ _id: 5a4ac4a25a9b360864575a60,
+  userId: '5a18e28fd1964a13bc99ac69',
+  finalPrice: 60,
+  orderDate: 2018-01-01T23:30:50.126Z,
+  __v: 0,
+  shippingDate: 2018-01-17T22:00:00.000Z,
+  street: 's',
+  city: 'd',
+  products: 
+   [ { _id: 5a2341766200f81270574124,
+       name: 'assassin\'s creed origins pc',
+       price: 60,
+       picture: 'https://images-na.ssl-images-amazon.com/images/I/61NxFLLO7mL.jpg',
+       __v: 0 } ] }

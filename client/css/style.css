@@ -7,6 +7,40 @@
   margin: 5px;
 }
 
+.headerSpace {
+  margin-top: 60px;
+}
+
+.searchPadding {
+  padding: 50px;
+}
+
+.centeredDiv {
+  margin: 45%;
+  width: 5%;
+}
+
+.tableLimit {
+  height: 260px;
+  overflow: auto;
+}
+
+.inputWLimit {
+  width: 35px;
+}
+
+.green {
+  color: green;
+}
+
+.black {
+  color: black;
+}
+
+.red {
+  color: red;
+}
+
 .carouselPic {
   margin-right: auto;
   margin-left: auto;
@@ -19,7 +53,6 @@
   text-overflow: ellipsis;
 }
 .centerText {
-  background-color: red;
  text-align: center;
 }
 

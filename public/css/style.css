@@ -9,6 +9,10 @@
  text-align: center;
 }
 
+.headerSpace {
+  margin-top: 60px;
+}
+
 .anchorBtn {
   border-radius: 9px;
   font-size: 135%;

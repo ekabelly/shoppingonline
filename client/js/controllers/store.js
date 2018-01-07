@@ -7,12 +7,6 @@
 //	cart: the order/cart that is being handled atm
 //	categories: all the store categories and products.
 //	navCategory: an array of products. might be a category or search value.
-// promotion: an array of products being displayed in the carousel.
-// }
-const promotion = [{name:'watch dogs', price:'60$', src:'https://i.pinimg.com/736x/3b/5d/22/3b5d22ba69dffe36bf1c1cf908195d4d--playstation--console-playstation-games.jpg'},
-{name:'Batman: Arkham Knight', price:'60$', src:'https://multimedia.bbycastatic.ca/multimedia/products/1500x1500/102/10207/10207566.jpg'},
-{name:'Doom 2017', price:'60$', src:'https://multimedia.bbycastatic.ca/multimedia/products/500x500/103/10380/10380094.jpg'},
-{name:'dishonored: death of the outsider', price:'60$', src:'https://pcgames-download.com/wp-content/uploads/2017/09/Dishonored-Death-of-the-Outsider-PC-2017.jpg'}];
 
 app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
@@ -106,8 +100,9 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		$scope.finalPrice = 0;
 		Object.keys(products).forEach(i=>{
 			$scope.finalPrice += products[i].q * products[i].val.price;
-			if (!products[i].q) delete $scope.productsDisp[i];
+			if (!products[i].q) delete $scope.productsDisp[i]; //if q is 0 delete the product from the display arr
 		});
+		if ($scope.finalPrice === 0) $scope.productsDisp = false;
 	}
 
 	$scope.removeProduct = id =>{
@@ -132,9 +127,7 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 			$scope.cart.shippingDate = new Date($scope.data.shippingDate);
 		}
 		if(validateCart()){
-			patchOrder($cookies.get('cart'), ()=>{
-				window.location.assign('/store/#!/thanks');
-			});
+			patchOrder($cookies.get('cart'), ()=>window.location.assign('/store/#!/thanks'));
 		}
 	}
 
@@ -156,11 +149,11 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
 	const setCart = () =>{
 		if ($cookies.get('cart')) return patchOrder($cookies.get('cart'));
-		putOrder();
+		return putOrder();
 	}
 
 	const validateCart = () =>{
-		const cart = $scope.cart;
+		const {cart} = $scope;
 		if(cart.shippingDate && cart.street && cart.city){
 			$scope.err = false;
 			return true;
@@ -193,8 +186,11 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 	}).catch(err=>errHnadler(err));
 
 	const initPgae = () =>{
-		$scope.data = {};
-		$scope.promotion = promotion;
+		$scope.data = {
+			today: new Date(),
+			invoice: 'http://localhost:4001/store/'+$cookies.get('cart')+'/invoice'
+		};
+		// console.log($scope.data.today);
 		isAuthenticated(); 
 	}
 
@@ -202,6 +198,8 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		$cookies.remove('cart', {path:'/'});
 		$cookies.remove('cart');
 	}
+
+	// $scope.fetchInvoice = () =>$http.get('/store/'+$cookies.get('cart')+'/invoice').catch(err=>errHnadler(err));
 
 	initPgae();
 

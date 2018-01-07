@@ -7,8 +7,20 @@
   margin: 5px;
 }
 
+.headerSpace {
+  margin-top: 60px;
+}
+
 .centerText {
  text-align: center;
+}
+
+.black {
+  color: black;
+}
+
+.searchPadding {
+  padding: 50px;
 }
 
 .err {

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
+const formidable = require('formidable');
 const Category = require('./models/category.model');
 const Product = require('./models/product.model');
 const Order = require('./models/order.model');
@@ -7,7 +9,10 @@ const POPULATE_FIELD = 'products';
 const createSuccessResponse = data => ({data, success: true});
 const responseMiddleware = (req, res) => res.json(createSuccessResponse(req.data));
 
-const errorHandler = (err,res,cb) => err ? res.json(err) : cb();
+const errorHandler = (err,res,cb) => {
+	if (err) res.json(err);
+	if (cb) {cb()}
+}
 
 const successHandler = (req, data, next) => {
 	req.data = data;
@@ -34,6 +39,10 @@ const createOrder = (req, res, next) =>{
 	saveNewItem(req, res, next);
 }
 
+const createInvoice = (req, res, next) =>{
+	fs.writeFile('invoices/'+req.params.id+'.txt', req.data, err=>errorHandler(err, res, ()=>res.download('invoices/'+req.params.id+'.txt')));
+}
+
 const updateOrder = (req, res, next) => Order.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
 const updateProduct = (req, res, next) => Product.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
@@ -52,7 +61,12 @@ const fetchOrders = (req, res, next) =>{
 	Order.find(find).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 }
 
+const uploadFile = (req, res, next) =>{
+	const form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files)=> errorHandler(err, res, () => successHandler(req, {messege:'file uploaded'}, next)));
+}
+
 const fetchUserOrders = (req, res, next) =>Order.find({userId: req.user._id}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () =>successHandler(req, data, next)));
 
-module.exports = {createCategory, createProduct, updateProduct, createOrder, updateOrder, fetchProducts, fetchOrders, fetchCategories, fetchOrders, fetchUserOrders, fetchProductsByCategory, responseMiddleware}
+module.exports = {createCategory, createProduct, createInvoice, updateProduct, createOrder, updateOrder, fetchProducts, fetchOrders, fetchCategories, fetchOrders, fetchUserOrders, fetchProductsByCategory, uploadFile, responseMiddleware}
 

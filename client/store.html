@@ -1,66 +1,25 @@
 <div>
-	<div class="container-fluid" style="color: black;">
+	<div class="container-fluid black">
 		<div class="row">
 
 			<!-- category nav -->
-			<div class="col-md-2">  
-				<ul class="nav nav-pills nav-stacked ">
+			<div class="col-md-1">
+				<div>
+					<input class="form-control" type="search" placeholder="search" ng-model="search">
+				</div> 
+				<ul class="nav nav-pills nav-stacked">
 					<li ng-click="displayAllProducts()"><a href="#"> All Products </a></li>
 					<li ng-repeat="(i, val) in categories" ng-click="changeCategory(i)"><a href="#">{{val.name}}</a></li>
 				</ul>
 			</div>
 
-			<!-- carousel -->
-			<div class="col-md-7">
-				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-					<!-- Indicators -->
-					<ol class="carousel-indicators">
-						<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-						<li data-target="#carousel-example-generic" data-slide-to="1"></li>
-						<li data-target="#carousel-example-generic" data-slide-to="2"></li>
-						<li data-target="#carousel-example-generic" data-slide-to="3"></li>
-					</ol>
-
-					<!-- Wrapper for slides -->
-					<div class="carousel-inner" role="listbox">
-						<div class="item active col-md-6 col-md-offset-3 ">
-							<img src="{{promotion[0].src}}" width="400" class="carouselPic">
-							<div class="carousel-caption" style="font-size: 20px;">
-								{{promotion[0].name}} <br/>
-								{{promotion[0].price}}$
-							</div>
-						</div>
-						<div class="item col-md-6 col-md-offset-3">
-							<img src="{{promotion[1].src}}" width="400" class="carouselPic">
-							<div class="carousel-caption" style="font-size: 20px;">
-								{{promotion[1].name}} <br/>
-								{{promotion[1].price}}$
-							</div>
-						</div>
-						<div class="item col-md-6 col-md-offset-3">
-							<img src="{{promotion[2].src}}" width="400" class="carouselPic">
-							<div class="carousel-caption" style="font-size: 20px;">
-								{{promotion[2].name}} <br/>
-								{{promotion[2].price}}$
-							</div>
-						</div>
-						<div class="item col-md-6 col-md-offset-3">
-							<img src="{{promotion[3].src}}" width="400" class="carouselPic">
-							<div class="carousel-caption" style="font-size: 20px;">
-								{{promotion[3].name}} <br/>
-								{{promotion[3].price}}$
-							</div>
-						</div>
-
-						<!-- Controls -->
-						<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-							<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-							<span class="sr-only">Previous</span>
-						</a>
-						<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-							<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-							<span class="sr-only">Next</span>
-						</a>
+			<!-- products display -->
+			<div class="col-md-8 container-fluid thumbnail">
+				<div class="row">
+				</div>
+				<div class="row searchPadding">
+					<div ng-repeat="product in navCategory | filter:search">
+						<card />
 					</div>
 				</div>
 			</div>
@@ -69,12 +28,12 @@
 			<div class="col-md-3">
 				<h2> Your Cart: </h2>
 				<h3>Total Price: {{finalPrice}}$</h3>
-				<div style="height: 260px; overflow: auto;">
+				<div class="tableLimit">
 					<table class="table table-hover" ng-if="productsDisp">
 						<tr ng-repeat="product in productsDisp">
 							<td>{{product.val.name}}</td>
 							<td>{{product.val.price}}$</td>
-							<td><input ng-click="setFinalPrice()" type="number" ng-model="product.q" ng-model="product.q" style="width: 35px;" /></td>
+							<td><input ng-click="setFinalPrice()" type="number" ng-model="product.q" ng-model="product.q" class="inputWLimit" /></td>
 							<td><span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="top" title="Remove from Cart" ng-click="removeProduct(product.val._id)"></span></td>
 						</tr>
 					</table>
@@ -82,21 +41,7 @@
 				<div ng-if="productsDisp">
 					<button class="btn btn-default" ng-click="saveCart()">Save</button>
 					<a href="#!finish" ng-click="saveCart()"> <button class="btn btn-default">Finish</button></a>
-					<span ng-if="orderSuccess" style="color: green;" class="glyphicon glyphicon-ok"></span>
-				</div>
-			</div>
-		</div> <br>
-		<div class="row">
-			<div class="col-md-10 col-md-offset-1 container-fluid thumbnail">
-				<div class="row">
-					<div class="col-md-2 col-md-offset-5">
-						<input class="form-control" type="search" placeholder="search" ng-model="search">
-					</div>
-				</div>
-				<div class="row" style="padding: 50px;">
-					<div ng-repeat="product in navCategory | filter:search">
-						<card />
-					</div>
+					<span ng-if="orderSuccess" class="glyphicon glyphicon-ok green"></span>
 				</div>
 			</div>
 		</div>

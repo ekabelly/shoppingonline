@@ -19,10 +19,11 @@
 </head>
 <body ng-app="App" ng-controller="Admin">
 	<header>
-		<nav class="navbar navbar-default">
+		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<a class="navbar-brand">hello, {{user.fName}} </a>
+					<a class="navbar-brand"  href="/store">To Store</a>
 				</div>
 				<div>
 					<a class="navbar-right navbar-brand" ng-click="logout()" href="/logout">logout</a>
@@ -30,9 +31,9 @@
 			</div>
 		</nav>
 	</header>
-	<div>
+	<div class="headerSpace">
 		<div>
-			<div class="container-fluid" style="color: black;">
+			<div class="container-fluid" class="black">
 				<div class="row">
 					<!-- category nav -->
 					<div class="col-md-2 rightBorder">  
@@ -102,7 +103,7 @@
 								<input class="form-control" type="search" placeholder="search" ng-model="search">
 							</div>
 						</div>
-						<div class="row" style="padding: 50px;">
+						<div class="row searchPadding">
 							<div ng-repeat="product in navCategory | filter:search">
 								<card />
 							</div>

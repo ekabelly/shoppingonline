@@ -1,65 +1,62 @@
-<div>
-	<div class="form"> 
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-offset-1 col-md-10">   
-					<form class="form-horizontal">
-						<div class="form-group">
-							<div class="form-group">
-								<label for="city" class="col-sm-2 control-label">City</label>
-								<div class="col-sm-4">
-									<input type="text" ng-model="cart.city" class="form-control" id="city" placeholder="City">
-								</div>
-								<label for="street" class="col-sm-2 control-label">Street</label>
-								<div class="col-sm-4">
-									<input type="text" ng-model="cart.street" class="form-control" id="street" placeholder="Street">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="shippingDate" class="col-sm-2 control-label">Shipping Date</label>
-								<div class="col-sm-4">
-									<input type="date" ng-change="log()" ng-model="data.shippingDate" class="form-control" id="shippingDate">
-								</div>
-								<label for="orderDate" class="col-sm-2 control-label"> Order Date</label>
-								<div class="col-sm-4">
-									<input type="date" ng-model="data.orderDate" class="form-control" id="orderDate" disabled>
-								</div>
-							</div>
-							<div>
-								<h2> Total Price: {{cart.finalPrice}}$</h2>
-								<!-- {{cart}} -->
-							</div> <br/>
-							<div class="form-group">
-								<div class="col-sm-10">
-									<div class="table">
-										<table class="table table-hover">
-											<tr>
-												<th> Name </th>
-												<th> Price </th>
-												<th> Picture </th>
-											</tr>
-											<tr ng-repeat="val in cart.products">
-												<td> {{val.name}} </td>
-												<td> {{val.price}}$ </td>
-												<td><img src={{val.picture}} width="30"></td>
-											</tr>
-										</table>
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<button ng-click="orderNow()" class="btn btn-default">Order Now!</button>
-									<p ng-if="err" style="color: red;"> {{err}} </p>
-								</div>
-							</form>
+
+<div class="form"> 
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-10">   
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="city" class="col-sm-2 control-label">City</label>
+						<div class="col-sm-4">
+							<input type="text" ng-model="cart.city" class="form-control" id="city" placeholder="City">
+						</div>
+						<label for="street" class="col-sm-2 control-label">Street</label>
+						<div class="col-sm-4">
+							<input type="text" ng-model="cart.street" class="form-control" id="street" placeholder="Street">
 						</div>
 					</div>
-				</div><!-- tab-content -->
-			</div> <!-- /form -->
-
-
-
-
-
-			finished?
-			<a href="#!"> <button class="btn btn-default">back to store</button></a>
+					<div class="form-group">
+						<label for="shippingDate" class="col-sm-2 control-label">Shipping Date</label>
+						<div class="col-sm-4">
+							<input type="date" ng-change="log()" ng-model="data.shippingDate" class="form-control" id="shippingDate" min="{{data.today | date:'yyyy-MM-dd' }}">
+						</div>
+						<label for="orderDate" class="col-sm-2 control-label"> Order Date</label>
+						<div class="col-sm-4">
+							<input type="date" ng-model="data.orderDate" class="form-control" id="orderDate" disabled>
+						</div>
+					</div>
+					<div>
+						<h2> Total Price: {{cart.finalPrice}}$</h2>
+						<!-- {{cart}} -->
+					</div> <br/>
+					<div class="form-group">
+						<div class="col-sm-10">
+							<div class="table">
+								<table class="table table-hover">
+									<tr>
+										<th> Name </th>
+										<th> Price </th>
+										<th> Picture </th>
+									</tr>
+									<tr ng-repeat="val in cart.products track by $index">
+										<td> {{val.name}} </td>
+										<td> {{val.price}}$ </td>
+										<td><img src={{val.picture}} width="30"></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div>
+								<button ng-click="orderNow()" class="btn btn-default">Order Now!</button>
+								<p ng-if="err" class="red"> {{err}} </p>
+							</div>
+							<div>
+								<a href="#!"> <button class="btn btn-default">Back To Store</button></a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
+	</div><!-- tab-content -->
+</div> <!-- /form -->

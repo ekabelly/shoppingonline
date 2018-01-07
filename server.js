@@ -13,10 +13,10 @@ const AdminRoute = require('./route/admin');
 const {dburl, secret, cookieName, userResponse} = require('./auth/config');
 const {fetchProducts, fetchOrders, responseMiddleware, fetchUserOrders} = require('./db/mongo');
 
+const startServer = () => app.listen(4001, ()=>console.log('server up on port 4001'));
+
 passport.use('local', new LocalStrategy(passportConfig.login));
-passport.use('local-sign', new LocalStrategy({
-  passReqToCallback: true
-}, passportConfig.signup));
+passport.use('local-sign', new LocalStrategy({passReqToCallback: true}, passportConfig.signup));
 passport.serializeUser(passportConfig.serializeUser);
 passport.deserializeUser(passportConfig.deserializeUser);
 
@@ -41,9 +41,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/login', express.static('public'));
-
-// app.get('/login', (req, res)=>res.redirect('/login.html'));
-// app.get('/signup', (req, res)=>res.redirect('/signup.html'));
 
 app.post('/login', passport.authenticate('local'), fetchUserOrders, userResponse);
 
@@ -73,5 +70,3 @@ app.use('/admin', express.static('admin'));
 app.use('/admin', AdminRoute);
 
 mongoose.connect(dburl, {useMongoClient: true}, err=>err?console.log(err):startServer());
-
-const startServer = () => app.listen(4001, ()=>console.log('server up on port 4001'));
