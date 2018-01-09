@@ -1,5 +1,7 @@
 app.controller('Admin', ($scope, $http) => {
 
+//------------------------------general funcions
+
 	const successHandler = (req, res, cb) =>{
 		$scope[req] = res;
 		$scope.spinner = false;
@@ -17,17 +19,31 @@ app.controller('Admin', ($scope, $http) => {
 	const errOffHandler = errType =>$scope.err[errType] = '';
 
 	const isAuthenticated = () =>$http.get('/user').then(res=>{
-		// console.log(res.data.data)
 		successHandler('user', res.data.data);
 		fetchCategoreis();
 	}).catch(err=>{
-		// console.log(err)
 		$scope.user = false;
 		$scope.spinner = false;
 	});
 
+	$scope.logout = () =>{
+		$cookies.remove('cart', {path:'/'});
+		$cookies.remove('cart');
+	}
+
+	const initPgae = () =>{
+		$scope.err = {};
+		$scope.data = {
+			newCategory:'',
+			newProduct:{},
+			pics:{}
+		}
+		isAuthenticated(); 
+	}
+
+//-------------------------------------------categpries and products display functions
+
 	const fetchCategoreis = () =>$http.get('/store/categories').then(res=>{
-		// console.log(res.data.data);
 		$scope.categories = res.data.data;
 		makeAllProductsArr($scope.displayAllProducts);
 	});
@@ -45,12 +61,12 @@ app.controller('Admin', ($scope, $http) => {
 		$scope.navCategory = $scope.allProducts.slice();
 	}
 
-	$scope.logout = () =>{
-		$cookies.remove('cart', {path:'/'});
-		$cookies.remove('cart');
-	}
+//-------------------------------------edit and new products
 
-	$scope.patchProduct = product =>$http.patch(product._id+'/product', product).then(res=>console.log(res)).catch(err=>errHnadler(err, 'newProduct'));
+	$scope.patchProduct = product =>{
+		if ($scope.data.pics[product._id]) product.picture = $scope.data.pics[product._id];
+		$http.patch(product._id+'/product', product).then(res=>console.log(res)).catch(err=>errHnadler(err, 'newProduct'));
+	}
 
 	$scope.putCategory = () =>{
 		if (!$scope.data.newCategory) return errHnadler('Please Fill All Fields', 'newCategory'); 
@@ -83,14 +99,31 @@ app.controller('Admin', ($scope, $http) => {
 		return false
 	}
 
-	const initPgae = () =>{
-		$scope.err = {};
-		$scope.data = {
-			newCategory:'',
-			newProduct:{}
-		}
-		isAuthenticated(); 
+	$scope.upload = id =>{
+		const file = document.getElementById('pic'+id);
+		const formData = new FormData();
+		formData.append('sampleFile', file.files[0]);
+		console.log(file.files[0]);
+		uploadReq(formData, id, file.files[0].name);
 	}
+
+	const uploadReq = (formData, id, fileName) =>{
+		const xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function () {
+			if (this.readyState === 4 && this.status === 200) {
+				if (id) {
+					$scope.data.pics[id] = '/login/upload/'+fileName;
+				}else{
+					$scope.data.newProduct.picture = '/login/upload/'+fileName;
+				}
+				$scope.$apply();
+			}
+		}
+		xhr.open('post', 'http://localhost:4001/admin/image');
+		xhr.send(formData);
+	}
+
+//---------------------------------------------
 
 	initPgae();
 

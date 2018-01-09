@@ -1,10 +1,8 @@
 app.controller('Login', ($scope, $http, $cookies) => {
 
-	//general funtions
+//-------------------------------------general funtions
 
-	const adminHandler = role =>{
-		if (role === 'admin') $http.post('/admin', {email:$scope.login.email}).then(x=>console.log(x)).catch(err=>console.log(err));
-	}
+	$scope.cartHandler = id =>$cookies.put('cart', id, {path:'/'});
 
 	const successHandler = (req, res) =>{
 		$scope[req] = res;
@@ -23,10 +21,7 @@ app.controller('Login', ($scope, $http, $cookies) => {
 
 	const fetchItems = items =>$http.get('/'+items).then(response=>successHandler(items, response.data.data));
 
-	const isAuthenticated = () =>$http.get('/user').then(res=>{
-		successHandler('user', res.data.data);
-		// adminHandler(res.data.data.role);
-	}).catch(err=>{
+	const isAuthenticated = () =>$http.get('/user').then(res=>successHandler('user', res.data.data)).catch(err=>{
 		$scope.user = false;
 		$scope.spinner = false;
 	});
@@ -37,19 +32,11 @@ app.controller('Login', ($scope, $http, $cookies) => {
 		isAuthenticated();
 	}
 
-	initPage();
-	
 	$scope.clickEventFetchItems = items =>{
-		if (!$scope[items]) { 
-			fetchItems(items);
-		}
+		if (!$scope[items]) fetchItems(items);
 	}
 
-	$scope.initLogin = () =>$http.post('/login', {username:$scope.login.email, password:$scope.login.pass}).then(response=>{
-		successHandler('user', response.data.data);
-		// console.log(response.data.data)
-		// adminHandler(response.data.data.role);
-	}).catch(err=>errHnadler(err));
+	$scope.initLogin = () =>$http.post('/login', {username:$scope.login.email, password:$scope.login.pass}).then(response=>successHandler('user', response.data.data)).catch(err=>errHnadler(err));
 
 	$scope.initSignup = () =>{
 		if($scope.signup.password !== $scope.signup.pass2){
@@ -61,6 +48,6 @@ app.controller('Login', ($scope, $http, $cookies) => {
 			successHandler('newUser', response.data.user)).catch(err=>errHnadler(err));
 	}
 
-	$scope.cartHandler = id =>$cookies.put('cart', id, {path:'/'});
+	initPage();
 	
 });

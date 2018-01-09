@@ -14,7 +14,17 @@
 			</div>
 
 			<!-- products display -->
-			<div class="col-md-8 container-fluid thumbnail">
+			<div class="col-md-8 container-fluid thumbnail" ng-if="data.showCart">
+				<div class="row">
+				</div>
+				<div class="row searchPadding">
+					<div ng-repeat="product in navCategory | filter:search">
+						<card />
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-11 container-fluid thumbnail" ng-if="!data.showCart">
 				<div class="row">
 				</div>
 				<div class="row searchPadding">
@@ -25,22 +35,32 @@
 			</div>
 
 			<!-- cart display -->
-			<div class="col-md-3">
-				<h2> Your Cart: </h2>
-				<h3>Total Price: {{finalPrice}}$</h3>
+			<div class="col-md-3 container-fluid" ng-if="data.showCart">
+				<div class="row">
+					<div class="col-md-10">
+						<strong class="bigger"> Your Cart: </strong>
+					</div>
+					<div class="col-md-offset-2">
+						<span class="glyphicon glyphicon-remove btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Hide Cartd" ng-click="hideCart()"></span>
+					</div>
+					<div class="col-md-12">
+						<h3>Total Price: {{finalPrice}}$</h3>	
+					</div>
+				</div>
 				<div class="tableLimit">
 					<table class="table table-hover" ng-if="productsDisp">
 						<tr ng-repeat="product in productsDisp">
 							<td>{{product.val.name}}</td>
 							<td>{{product.val.price}}$</td>
-							<td><input ng-click="setFinalPrice()" type="number" ng-model="product.q" ng-model="product.q" class="inputWLimit" /></td>
+							<td><input ng-click="setFinalPrice(productsDisp)" type="number" ng-model="product.q" ng-model="product.q" class="inputWLimit" /></td>
 							<td><span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="top" title="Remove from Cart" ng-click="removeProduct(product.val._id)"></span></td>
 						</tr>
 					</table>
 				</div>
 				<div ng-if="productsDisp">
-					<button class="btn btn-default" ng-click="saveCart()">Save</button>
-					<a href="#!finish" ng-click="saveCart()"> <button class="btn btn-default">Finish</button></a>
+					<button class="btn btn-default" ng-click="setFinalPrice([])">Empty Cart</button>
+					<button class="btn btn-default" ng-click="saveCart()">Save Cart</button>
+					<a href="#!finish" ng-click="saveCart()"> <button class="btn btn-default">Checkout</button></a>
 					<span ng-if="orderSuccess" class="glyphicon glyphicon-ok green"></span>
 				</div>
 			</div>

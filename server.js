@@ -2,6 +2,9 @@ const session = require('express-session');
 const CP = require('cookie-parser');
 const BP = require('body-parser');
 const express = require('express');
+const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
@@ -12,6 +15,7 @@ const Route = require('./route/store');
 const AdminRoute = require('./route/admin');
 const {dburl, secret, cookieName, userResponse} = require('./auth/config');
 const {fetchProducts, fetchOrders, responseMiddleware, fetchUserOrders} = require('./db/mongo');
+const uploadFile = require('./upload');
 
 const startServer = () => app.listen(4001, ()=>console.log('server up on port 4001'));
 
@@ -20,6 +24,7 @@ passport.use('local-sign', new LocalStrategy({passReqToCallback: true}, passport
 passport.serializeUser(passportConfig.serializeUser);
 passport.deserializeUser(passportConfig.deserializeUser);
 
+app.use(fileUpload());
 app.use(BP.json());
 app.use(BP.urlencoded({extended:true}));
 app.use(CP());
@@ -68,5 +73,7 @@ app.all('*', passportConfig.validateAdmin);
 app.use('/admin', express.static('admin'));
 
 app.use('/admin', AdminRoute);
+
+app.post('/admin/image', uploadFile);
 
 mongoose.connect(dburl, {useMongoClient: true}, err=>err?console.log(err):startServer());

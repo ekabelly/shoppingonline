@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const formidable = require('formidable');
 const Category = require('./models/category.model');
 const Product = require('./models/product.model');
 const Order = require('./models/order.model');
@@ -61,12 +60,7 @@ const fetchOrders = (req, res, next) =>{
 	Order.find(find).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 }
 
-const uploadFile = (req, res, next) =>{
-	const form = new formidable.IncomingForm();
-    form.parse(req, (err, fields, files)=> errorHandler(err, res, () => successHandler(req, {messege:'file uploaded'}, next)));
-}
-
 const fetchUserOrders = (req, res, next) =>Order.find({userId: req.user._id}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () =>successHandler(req, data, next)));
 
-module.exports = {createCategory, createProduct, createInvoice, updateProduct, createOrder, updateOrder, fetchProducts, fetchOrders, fetchCategories, fetchOrders, fetchUserOrders, fetchProductsByCategory, uploadFile, responseMiddleware}
+module.exports = {createCategory, createProduct, createInvoice, updateProduct, createOrder, updateOrder, fetchProducts, fetchOrders, fetchCategories, fetchOrders, fetchUserOrders, fetchProductsByCategory, responseMiddleware}
 

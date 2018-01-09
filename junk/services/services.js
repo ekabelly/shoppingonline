@@ -9,3 +9,10 @@ const services = ($http, $cookies) => {
 }
 
 app.factory('Services', services);
+
+
+
+
+	const adminHandler = role =>{
+		if (role === 'admin') $http.post('/admin', {email:$scope.login.email}).then(x=>console.log(x)).catch(err=>console.log(err));
+	}

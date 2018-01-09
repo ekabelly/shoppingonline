@@ -2,6 +2,10 @@
   float: right;
 }
 
+.bigger {
+  font-size: 300%;
+}
+
 .cardText {
   list-style-type:none;
   margin: 5px;
