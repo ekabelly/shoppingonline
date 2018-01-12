@@ -13,9 +13,21 @@ const mongoose = require('mongoose');
 const passportConfig = require('./auth/passport_config');
 const Route = require('./route/store');
 const AdminRoute = require('./route/admin');
-const {dburl, secret, cookieName, userResponse} = require('./auth/config');
-const {fetchProducts, fetchOrders, responseMiddleware, fetchUserOrders} = require('./db/mongo');
 const uploadFile = require('./upload');
+
+const {
+	dburl, 
+	secret, 
+	cookieName, 
+	userResponse
+} = require('./auth/config');
+
+const {
+	fetchProducts, 
+	fetchOrders, 
+	responseMiddleware, 
+	fetchUserOrders
+} = require('./db/mongo');
 
 const startServer = () => app.listen(4001, ()=>console.log('server up on port 4001'));
 
@@ -49,7 +61,7 @@ app.use('/login', express.static('public'));
 
 app.post('/login', passport.authenticate('local'), fetchUserOrders, userResponse);
 
-app.post('/signup', passport.authenticate('local-sign'), (req, res)=>res.json({success:true, user:{fName:req.user.fName, lName:req.user.fName, role:req.user.role}}));
+app.post('/signup', passport.authenticate('local-sign'), (req, res)=>res.json({success:true, user:{_id:req.user._id, fName:req.user.fName, lName:req.user.fName, role:req.user.role}}));
 
 app.get('/logout', (req, res)=>{
   req.logout();
@@ -76,4 +88,4 @@ app.use('/admin', AdminRoute);
 
 app.post('/admin/image', uploadFile);
 
-mongoose.connect(dburl, {useMongoClient: true}, err=>err?console.log(err):startServer());
+mongoose.connect(dburl, {useMongoClient: true}, err=>err ? console.log(err) : startServer());
