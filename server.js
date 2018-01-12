@@ -13,7 +13,7 @@ const mongoose = require('mongoose');
 const passportConfig = require('./auth/passport_config');
 const Route = require('./route/store');
 const AdminRoute = require('./route/admin');
-const uploadFile = require('./upload');
+const {uploadFile} = require('./services');
 
 const {
 	dburl, 

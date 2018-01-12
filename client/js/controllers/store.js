@@ -28,11 +28,7 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		return $scope.err = err;
 	}
 
-	const isAuthenticated = () =>$http.get('/user').then(res=>{
-		console.log(res.data.data)
-		successHandler('user', res.data.data, initCart);
-	}).catch(err=>{
-		console.log(err)
+	const isAuthenticated = () =>$http.get('/user').then(res=>successHandler('user', res.data.data, initCart)).catch(err=>{
 		$scope.user = false;
 		$scope.spinner = false;
 	});
@@ -50,6 +46,15 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 	const transformDate = dateType =>$scope.data[dateType] = new Date($scope.cart[dateType]);
 
 	const createCookie = (key, val) =>$cookies.put(key, val);
+
+	const createRegex = regStr =>{
+		const regex = {
+			cvv:'^[0-9]{3,4}$',
+			cardNumber:'^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$'
+		}
+		return new RegExp(regex[regStr]);
+	}
+
 
 //------------------------------cart functions
 	const initCart = () =>{
@@ -142,7 +147,7 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
 	const validateCart = () =>{
 		const {cart} = $scope;
-		if(cart.shippingDate && cart.street && cart.city){
+		if(cart.shippingDate && cart.street && cart.city && creditCard()){
 			$scope.err = false;
 			return true;
 		} 
@@ -157,7 +162,15 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		$cookies.remove('cart');
 	}
 
-	$scope.hideCart = () =>$scope.data.showCart = false;
+	$scope.hideNShowCart = bool =>$scope.data.showCart = bool;
+
+	const creditCard = () =>{
+		const {cart} = $scope;
+		if (cart.creditDate && createRegex('cardNumber').test(cart.creditCard) && createRegex('cvv').test(cart.cvv)) {
+			return true;
+		}
+		return false;
+	}
 
 //--------------------------products & categories functions
 	
@@ -185,6 +198,7 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 	$scope.orderNow = () =>{
 		if ($scope.data.shippingDate) {
 			$scope.cart.shippingDate = new Date($scope.data.shippingDate);
+			$scope.cart.creditDate = new Date($scope.cart.creditDate);
 		}
 		if(validateCart()){
 			patchOrder($cookies.get('cart'), ()=>window.location.assign('/store/#!/thanks'));
@@ -211,6 +225,14 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		successHandler('cart', res.data.data[0]);
 		transformDate('orderDate');
 	}).catch(err=>errHnadler(err));
+
+	$scope.addAddress = () =>{
+		$scope.cart = {...$scope.cart,
+			street:$scope.user.street,
+			city:$scope.user.city
+		}
+		// $scope.$apply();
+	}
 
 //------------------------------------------------
 

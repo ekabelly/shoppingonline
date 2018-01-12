@@ -58,9 +58,6 @@ const createOrder = (req, res, next) =>{
 
 const updateOrder = (req, res, next) => Order.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
- 
-
-
 const fetchOrders = (req, res, next) =>{
 	const find = req.params.id ? {_id:req.params.id} : {};
 	Order.find(find).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
@@ -68,9 +65,7 @@ const fetchOrders = (req, res, next) =>{
 
 const fetchUserOrders = (req, res, next) =>Order.find({userId: req.user._id}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () =>successHandler(req, data, next)));
 
-const createInvoice = (req, res, next) =>{
-	fs.writeFile('invoices/'+req.params.id+'.txt', req.data, err=>errorHandler(err, res, ()=>res.download('invoices/'+req.params.id+'.txt')));
-}
+const createInvoice = (req, res, next) =>fs.writeFile('invoices/'+req.params.id+'.txt', req.data, err=>errorHandler(err, res, ()=>res.download('invoices/'+req.params.id+'.txt')));
 
 module.exports = {
 	createCategory, 

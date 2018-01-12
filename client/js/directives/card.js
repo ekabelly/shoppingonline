@@ -1,7 +1,7 @@
 app.directive('card', ()=> {
 	return {
 		restrict: 'E',
-		template: 	`<div class="card col-md-3" style="height:300px;">
+		template: 	`<div class="card col-md-3 card col-sm-6" style="height:300px;">
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-md-9">
