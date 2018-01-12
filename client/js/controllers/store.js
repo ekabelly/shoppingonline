@@ -37,10 +37,31 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		$scope.data = {
 			showCart:ifCart(),
 			today: new Date(),
+			blockedDates:blockedDates(),
 			invoice: 'http://localhost:4001/store/'+$cookies.get('cart')+'/invoice'
 		};
 		// console.log($scope.data.today);
 		isAuthenticated(); 
+	}
+
+	const blockedDates = () =>{
+		fetchOrders().then(({data})=>{
+			let dates =  {};
+			let blockedDates = {};
+			data.data.forEach(order=>{
+				if (!order.shippingDate) return;
+				if(dates[order.shippingDate]){
+					dates[order.shippingDate] += 1;
+					if (dates[order.shippingDate] >= 3) {
+						blockedDates[order.shippingDate] = true;
+					}
+					return;
+				}
+				return dates[order.shippingDate] = 1;
+			});
+			console.log(blockedDates);
+			return blockedDates;
+		});
 	}
 
 	const transformDate = dateType =>$scope.data[dateType] = new Date($scope.cart[dateType]);
@@ -54,6 +75,8 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		}
 		return new RegExp(regex[regStr]);
 	}
+
+	const fetchOrders = () =>$http.get('/orders');
 
 
 //------------------------------cart functions
@@ -147,11 +170,23 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 
 	const validateCart = () =>{
 		const {cart} = $scope;
-		if(cart.shippingDate && cart.street && cart.city && creditCard()){
+		if(cart.street && cart.city && creditCard()){
 			$scope.err = false;
 			return true;
-		} 
+		}
+		if(validateShippingDate(cart.shippingDate)) return false;
 		$scope.err = 'please fill all the fields Correctly';
+		return false;
+	}
+
+	const validateShippingDate = date =>{
+		if (date) {
+			if ($scope.data.blockedDates[date]) {
+				$scope.err = 'Shipping Date Is Full. Please Pick Another Date.';
+				return true;
+			}
+			return false;
+		}
 		return false;
 	}
 
@@ -171,6 +206,11 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		}
 		return false;
 	}
+
+	const fetchOrder = id =>$http.get('/store/'+id+'/order').then(res=>{
+		successHandler('cart', res.data.data[0]);
+		transformDate('orderDate');
+	}).catch(err=>errHnadler(err));
 
 //--------------------------products & categories functions
 	
@@ -220,11 +260,6 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		$scope.orderSuccess = true;
 		$timeout(()=>$scope.orderSuccess = false, 2500);
 	}
-
-	const fetchOrder = id =>$http.get('/store/'+id+'/order').then(res=>{
-		successHandler('cart', res.data.data[0]);
-		transformDate('orderDate');
-	}).catch(err=>errHnadler(err));
 
 	$scope.addAddress = () =>{
 		$scope.cart = {...$scope.cart,
