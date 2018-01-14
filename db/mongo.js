@@ -12,7 +12,7 @@ const responseMiddleware = (req, res) => res.json(createSuccessResponse(req.data
 
 const errorHandler = (err,res,cb) => {
 	if (err) res.json(err);
-	if (cb) {cb()}
+	if (cb) cb();
 }
 
 const successHandler = (req, data, next) => {
@@ -82,4 +82,3 @@ module.exports = {
 	fetchProductsByCategory, 
 	responseMiddleware
 }
-

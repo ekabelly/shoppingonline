@@ -63,8 +63,9 @@
 				<div ng-if="productsDisp">
 					<button class="btn btn-default" ng-click="setFinalPrice([])">Empty Cart</button>
 					<button class="btn btn-default" ng-click="saveCart()">Save Cart</button>
-					<a href="#!finish" ng-click="saveCart()"> <button class="btn btn-default">Checkout</button></a>
+					<button class="btn btn-default" ng-click="saveAndCheckOut()">Checkout</button>
 					<span ng-if="orderSuccess" class="glyphicon glyphicon-ok green"></span>
+					<span ng-if="err.http">{{err.http}}</span>
 				</div>
 			</div>
 		</div>
