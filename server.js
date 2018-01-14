@@ -13,7 +13,7 @@ const mongoose = require('mongoose');
 const passportConfig = require('./auth/passport_config');
 const Route = require('./route/store');
 const AdminRoute = require('./route/admin');
-const {uploadFile} = require('./services');
+const {uploadFile, responseMiddleware} = require('./services');
 
 const {
 	dburl, 
@@ -25,7 +25,6 @@ const {
 const {
 	fetchProducts, 
 	fetchOrders, 
-	responseMiddleware, 
 	fetchUserOrders
 } = require('./db/mongo');
 

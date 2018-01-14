@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
+const createSuccessResponse = data => ({data, success: true});
+const responseMiddleware = (req, res) => res.json(createSuccessResponse(req.data));
+
 const uploadFile = (req, res) =>{
 	if (!req.files) return res.status(400).send('No files were uploaded.');
 	const {sampleFile} = req.files;
@@ -40,4 +43,34 @@ const validateFinalPrice = (req, res, next) =>{
 	return res.json({status:'fail', messege:'no cheating!'});
 }
 
-module.exports = {uploadFile, checkCreditCard, validateFinalPrice};
+const bookedDates = (req, res, next) =>{
+	const miliDay = 24*60*60*1000; //a day in miliseconds, 86,400,000
+	const {shippingDate} = req.body;
+	createDatesArr(req.data).forEach(date=>{
+		if (shippingDate < date+miliDay && shippingDate > date-miliDay) { //this means the requested shipping date is the same 24h as a fully booked date
+			req.data = {success:true, data:{validDate:false}};
+			return next();
+		}
+	});
+
+}
+
+const createDatesArr = orders =>{
+	let dates =  {};
+	let blockedDates = {};
+	orders.forEach(order=>{
+		if (!order.shippingDate) return;
+		if(dates[order.shippingDate.getTime()]){
+			dates[order.shippingDate.getTime()] += 1;
+			if (dates[order.shippingDate.getTime()] >= 3) {
+				blockedDates[order.shippingDate.getTime()] = true;
+			}
+			return;
+		}
+		return dates[order.shippingDate.getTime()] = 1;
+	});
+	console.log(blockedDates);
+	return blockedDates;
+}
+
+module.exports = {uploadFile, checkCreditCard, validateFinalPrice, bookedDates, responseMiddleware};

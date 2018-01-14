@@ -3,9 +3,9 @@ const Router = express.Router();
 const {
 	createCategory, 
 	createProduct, 
-	updateProduct, 
-	responseMiddleware
+	updateProduct
 } = require('../db/mongo');
+const {responseMiddleware} = require('../services');
 
 Router.put('/category', createCategory, responseMiddleware);
 

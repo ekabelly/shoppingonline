@@ -7,9 +7,6 @@ const POPULATE_FIELD = 'products';
 
 //-----------general functions
 
-const createSuccessResponse = data => ({data, success: true});
-const responseMiddleware = (req, res) => res.json(createSuccessResponse(req.data));
-
 const errorHandler = (err,res,cb) => {
 	if (err) res.json(err);
 	if (cb) cb();
@@ -79,6 +76,5 @@ module.exports = {
 	fetchCategories, 
 	fetchOrders, 
 	fetchUserOrders, 
-	fetchProductsByCategory, 
-	responseMiddleware
+	fetchProductsByCategory
 }
