@@ -80,7 +80,8 @@
 						</div>
 						<div class="col-sm-2">
 							<div>
-								<button ng-click="orderNow()" class="btn btn-default">Order Now!</button>
+								<button ng-if="!data.stopFinish" ng-click="orderNow()" class="btn btn-default">Order Now!</button>
+								<button ng-if="data.stopFinish" class="btn btn-default" disabled>Order Now!</button>
 								<p ng-if="err.orderNow" class="red"> {{err.orderNow}} </p>
 							</div>
 							<div>

@@ -28,6 +28,6 @@ const {checkCreditCard, validateFinalPrice, bookedDates, responseMiddleware} = r
 
 	Router.get('/:id/invoice', fetchOrders, createInvoice, responseMiddleware);
 
-	Router.post('/dates', fetchOrders, bookedDates);
+	Router.post('/dates', fetchOrders, bookedDates, responseMiddleware);
 
 	module.exports = Router;

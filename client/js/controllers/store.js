@@ -8,7 +8,7 @@ app.controller('Store', ($scope, $http, $cookies, $timeout) => {
 		if (cb) cb();
 	}
 
-	const errHnadler = (err, req) =>$scope.err[req] = err;
+	const errHandler = (err, req) =>$scope.err[req] = err;
 
 	const isAuthenticated = () =>$http.get('/user').then(res=>successHandler('user', res.data.data, initCart)).catch(err=>{
 		$scope.user = false;
@@ -143,16 +143,6 @@ const initCart = () =>{
 		return putOrder(cb);
 	}
 
-	const validateCart = () =>{
-		const {cart} = $scope;
-		if(cart.street && cart.city && creditCard() && cart.shippingDate){
-			errHnadler('', 'orderNow');
-			return true;
-		}
-		errHnadler('please fill all the fields Correctly', 'orderNow');
-		return false;
-	}
-
 	const ifCart = () => $cookies.get('cart') ? true : false;
 
 	$scope.logout = () =>{
@@ -173,7 +163,7 @@ const initCart = () =>{
 	const fetchOrder = id =>$http.get('/store/'+id+'/order').then(res=>{
 		successHandler('cart', res.data.data[0]);
 		transformDate('orderDate');
-	}).catch(err=>errHnadler(err, 'http'));
+	}).catch(err=>errHandler(err, 'http'));
 
 //--------------------------products & categories functions
 
@@ -183,9 +173,9 @@ $scope.displayAllProducts = () =>{
 }
 
 const fetchCategoreis = () =>$http.get('/store/categories').then(res=>{
-		$scope.categories = res.data.data;
-		makeAllProductsArr($scope.displayAllProducts);
-	});
+	$scope.categories = res.data.data;
+	makeAllProductsArr($scope.displayAllProducts);
+});
 
 $scope.changeCategory = i =>$scope.navCategory = $scope.categories[i].products;
 
@@ -198,10 +188,28 @@ const makeAllProductsArr = cb =>{
 //-------------------------------------------order(complete cart) functions
 
 $scope.orderNow = () =>{
+	$scope.data.stopFinish = true;
 	if ($scope.data.shippingDate) {
+		console.log('shippingDate ok');
 		$scope.cart.shippingDate = new Date($scope.data.shippingDate);
 		$scope.cart.creditDate = new Date($scope.cart.creditDate);
+		return validateShippingDate($scope.data.shippingDate.getTime());
 	}
+	console.log('err');
+	$scope.data.stopFinish = false;
+	return errHandler('please fill all the fields Correctly', 'orderNow');
+}
+
+const validateShippingDate = date =>$http.post('/store/dates', {shippingDate:date}).then(res=>{
+	$scope.data.stopFinish = false;
+	if (res.data.data.validDate) { //the server return a booleam wheter this date is booked or not
+		console.log(res.data.data);
+		return initOrder();
+	}
+	return errHandler('That Date is Fully Booked. Please Pick Another Date.', 'orderNow');
+}).catch(err=>errHandler(err, 'orderNow'));
+
+const initOrder = () =>{
 	if(validateCart()){
 		patchOrder($cookies.get('cart'), ()=>window.location.assign('/store/#!/thanks'));
 	}
@@ -210,13 +218,13 @@ $scope.orderNow = () =>{
 const patchOrder = (id, cb) =>$http.patch('/store/'+id+'/order', $scope.cart).then(res=>{
 	orderSuccess(id);
 	if(cb) cb();
-}).catch(err=>errHnadler(err, 'order'));
+}).catch(err=>errHandler(err, 'order'));
 
 const putOrder = cb =>$http.put('/store/order', $scope.cart).then(res=>{
 	createCookie('cart', res.data.data._id);
 	orderSuccess(res.data.data._id);
 	if (cb) cb();
-}).catch(err=>errHnadler(err, 'order'));
+}).catch(err=>errHandler(err, 'order'));
 
 const orderSuccess = id =>{
 	fetchOrder(id);
@@ -230,6 +238,16 @@ $scope.addAddress = () =>{
 		street:$scope.user.street,
 		city:$scope.user.city
 	}
+}
+
+const validateCart = () =>{
+	const {cart} = $scope;
+	if(cart.street && cart.city && creditCard() && cart.shippingDate){
+		errHandler('', 'orderNow');
+		return true;
+	}
+	errHandler('Please Fill All The Fields Correctly', 'orderNow');
+	return false;
 }
 
 //------------------------------------------------

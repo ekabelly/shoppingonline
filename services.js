@@ -46,13 +46,16 @@ const validateFinalPrice = (req, res, next) =>{
 const bookedDates = (req, res, next) =>{
 	const miliDay = 24*60*60*1000; //a day in miliseconds, 86,400,000
 	const {shippingDate} = req.body;
-	createDatesArr(req.data).forEach(date=>{
-		if (shippingDate < date+miliDay && shippingDate > date-miliDay) { //this means the requested shipping date is the same 24h as a fully booked date
-			req.data = {success:true, data:{validDate:false}};
+	console.log(shippingDate);
+	Object.keys(createDatesArr(req.data)).forEach(date=>{
+		date = Number(date);
+		if (shippingDate > date-miliDay && shippingDate < date+miliDay) { //this means the requested shipping date is the same 24h as a fully booked date
+			req.data = {validDate:false};
 			return next();
 		}
 	});
-
+	req.data = {validDate:true};
+	return next();
 }
 
 const createDatesArr = orders =>{
