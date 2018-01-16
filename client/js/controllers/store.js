@@ -188,26 +188,14 @@ const makeAllProductsArr = cb =>{
 //-------------------------------------------order(complete cart) functions
 
 $scope.orderNow = () =>{
-	$scope.data.stopFinish = true;
 	if ($scope.data.shippingDate) {
-		console.log('shippingDate ok');
 		$scope.cart.shippingDate = new Date($scope.data.shippingDate);
 		$scope.cart.creditDate = new Date($scope.cart.creditDate);
-		return validateShippingDate($scope.data.shippingDate.getTime());
+		return initOrder();
 	}
-	console.log('err');
-	$scope.data.stopFinish = false;
 	return errHandler('please fill all the fields Correctly', 'orderNow');
 }
 
-const validateShippingDate = date =>$http.post('/store/dates', {shippingDate:date}).then(res=>{
-	$scope.data.stopFinish = false;
-	if (res.data.data.validDate) { //the server return a booleam wheter this date is booked or not
-		console.log(res.data.data);
-		return initOrder();
-	}
-	return errHandler('That Date is Fully Booked. Please Pick Another Date.', 'orderNow');
-}).catch(err=>errHandler(err, 'orderNow'));
 
 const initOrder = () =>{
 	if(validateCart()){

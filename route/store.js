@@ -12,7 +12,8 @@ const {
 	fetchOrders,
 	updateOrder
 } = require('../db/mongo');
-const {checkCreditCard, validateFinalPrice, bookedDates, responseMiddleware} = require('../services');
+
+const {checkCreditCard, validateFinalPrice, responseMiddleware} = require('../services');
 
 	Router.post('/products', fetchProducts, responseMiddleware);
 
@@ -27,7 +28,5 @@ const {checkCreditCard, validateFinalPrice, bookedDates, responseMiddleware} = r
 	Router.get('/:id/order', fetchOrders, responseMiddleware);
 
 	Router.get('/:id/invoice', fetchOrders, createInvoice, responseMiddleware);
-
-	Router.post('/dates', fetchOrders, bookedDates, responseMiddleware);
 
 	module.exports = Router;
