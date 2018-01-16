@@ -40,8 +40,6 @@ const createProduct = (req, res, next) =>{
 
 const updateProduct = (req, res, next) => Product.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
-const fetchProductsByCategory = (req, res, next) =>Category.findOne({_id:req.params.id}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data)=>errorHandler(err, res, () => successHandler(req, data, next)));
-
 const fetchProducts = (req, res, next) =>{
 	const find = req.body.products ? { _id: {$in: req.body ? req.body.products : ''}} : {};
 	return Product.find(find).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
@@ -56,8 +54,12 @@ const createOrder = (req, res, next) =>{
 const updateOrder = (req, res, next) => Order.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
 const fetchOrders = (req, res, next) =>{
-	const find = req.params.id ? {_id:req.params.id} : {};
-	Order.find(find).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
+	const find = {};
+	const request = {street:false, lastDigits:false};
+	if (req.params.id) {
+		find = {_id:req.params.id};
+	}
+	Order.find(find, request).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 }
 
 const fetchUserOrders = (req, res, next) =>Order.find({userId: req.user._id}).populate({path:POPULATE_FIELD, model:Product}).exec((err, data) => errorHandler(err, res, () =>successHandler(req, data, next)));
@@ -75,6 +77,5 @@ module.exports = {
 	fetchOrders, 
 	fetchCategories, 
 	fetchOrders, 
-	fetchUserOrders, 
-	fetchProductsByCategory
+	fetchUserOrders
 }
