@@ -1,0 +1,7 @@
+{"_id":{"$oid":"5a18e28fd1964a13bc99ac69"},"role":"admin","email":"new@new","fName":"ido","lName":"kab","pass":"a120e494e9665885ccc7485b117c0836a807a669cc7927d249afdeefff70b3e6","__v":0}
+{"_id":{"$oid":"5a341235dc27b70fec2e9af6"},"fName":"idokab","lName":"kabk123","role":"customer","email":"test@test","pass":"a120e494e9665885ccc7485b117c0836a807a669cc7927d249afdeefff70b3e6","__v":0}
+{"_id":{"$oid":"5a4cf92567279600741bcff2"},"fName":"eedoh","lName":"kabelly","city":"","street":"","role":"customer","email":"ido@ido","pass":"a120e494e9665885ccc7485b117c0836a807a669cc7927d249afdeefff70b3e6","__v":0}
+{"_id":{"$oid":"5a4d06cc541c510e8cc801e8"},"fName":"ivan","lName":"sp","city":"city","role":"customer","email":"123@123","pass":"ee86648db6beee59430ed494996bd6f24021d71f9206d4c6bc0a86ea7bec77c5","__v":0}
+{"_id":{"$oid":"5a5862f4b728de0b8c7a36d1"},"fName":"hello","lName":"world","role":"customer","email":"newtest@new","pass":"14534afb9c35164986572ec659d043b8af0d26f4064176c550d8da2e9b61ad37","__v":0}
+{"_id":{"$oid":"5a5868752438d8134079c8b3"},"fName":"banana","lName":"kab","city":"kfar sava","street":"barbur","role":"customer","email":"mynewtest@tets","pass":"3cc6b110132520a4d45c40172baa3d56e451968f4f659999ed032ab74f22d123","__v":0}
+{"_id":{"$oid":"5a5d1cbe7dbd92166c3f5a74"},"fName":"ido","lName":"1111","city":"2222","street":"3333","role":"customer","email":"newtest@1234","pass":"3cc6b110132520a4d45c40172baa3d56e451968f4f659999ed032ab74f22d123","__v":0}
