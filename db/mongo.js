@@ -54,7 +54,7 @@ const createOrder = (req, res, next) =>{
 const updateOrder = (req, res, next) => Order.update({_id:req.params.id}, req.body, (err, data) => errorHandler(err, res, () => successHandler(req, data, next)));
 
 const fetchOrders = (req, res, next) =>{
-	const find = {};
+	let find = {};
 	const request = {street:false, lastDigits:false};
 	if (req.params.id) {
 		find = {_id:req.params.id};
