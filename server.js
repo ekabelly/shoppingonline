@@ -3,8 +3,6 @@ const CP = require('cookie-parser');
 const BP = require('body-parser');
 const express = require('express');
 const fileUpload = require('express-fileupload');
-const fs = require('fs');
-const path = require('path');
 const app = express();
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
@@ -43,7 +41,7 @@ app.use(session({
 	store: new MongoStore({
 		url: dburl
 	}),
-	secret:secret,
+	secret,
 	name:cookieName,
 	resave:false,
 	saveUninitialized:false,
@@ -62,10 +60,7 @@ app.post('/login', passport.authenticate('local'), fetchUserOrders, userResponse
 
 app.post('/signup', passport.authenticate('local-sign'), (req, res)=>res.json({success:true, user:{_id:req.user._id, fName:req.user.fName, lName:req.user.fName, role:req.user.role}}));
 
-app.get('/logout', (req, res)=>{
-  req.logout();
-  res.redirect('/login');
-});
+app.get('/logout', (req, res)=> req.logout());
 
 app.get('/products', fetchProducts, responseMiddleware);
 

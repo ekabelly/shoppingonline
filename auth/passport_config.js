@@ -2,8 +2,6 @@ const User = require('../db/models/user.model');
 const crypto = require('crypto');
 const {secret} = require('./config');
 
-const mongoose = require('mongoose');
-
 const passportHandlers = {
   passToCrypto:pass=>crypto.createHmac('sha256', secret).update(pass).digest('hex'),
   signup: (req, email, pass, done) => {
